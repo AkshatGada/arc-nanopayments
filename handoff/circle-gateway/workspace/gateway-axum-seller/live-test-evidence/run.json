@@ -1,0 +1,10 @@
+{
+  "chain": "arcTestnet",
+  "chainId": 5042002,
+  "buyer": "0x8F80A33830124802d49B49D42806c05C110dCBb8",
+  "seller": "0x2EF8A0d57128DEdaDD287b8AC64A986d6f26f9Bf",
+  "depositCapTestUsdc": "0.1",
+  "paymentCapTestUsdc": "0.001",
+  "maxPaidRequests": 1,
+  "funds": "public testnet faucet only"
+}

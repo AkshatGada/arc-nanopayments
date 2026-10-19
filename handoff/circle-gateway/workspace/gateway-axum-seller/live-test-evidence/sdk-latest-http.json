@@ -1,0 +1,16 @@
+{
+  "url": "https://registry.npmjs.org/@circle-fin%2fx402-batching/latest",
+  "method": "GET",
+  "status": 200,
+  "headers": {
+    "Date": "Fri, 16 Oct 2026 15:57:43 GMT",
+    "Content-Type": "application/json",
+    "Content-Length": "3053",
+    "Connection": "close",
+    "CF-Ray": "a4b842c65ea40027-BOM",
+    "CF-Cache-Status": "DYNAMIC",
+    "Access-Control-Allow-Origin": "*",
+    "Server": "cloudflare"
+  },
+  "recorded_at": "2026-10-16T15:57:43.063051+00:00"
+}

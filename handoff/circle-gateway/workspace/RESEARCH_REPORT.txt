@@ -1,0 +1,361 @@
+Circle Gateway / Nanopayments contribution research
+Research date: 16 October 2026 (Asia/Kolkata)
+Scope: public-source research and synthetic offline probes only.
+
+RECOMMENDATION
+
+Start with a native Rust/Axum Gateway seller example and a small compatibility
+suite using the existing x402-rs crates. A new Rust seller SDK is not justified
+by the code inspected: the existing generic middleware can advertise Gateway
+requirements and call Circle's hosted settlement API directly. The research
+probe demonstrates this without modifying upstream code.
+
+The deeper follow-up is explicit Rust buyer discrimination/support for Gateway.
+Do not present this as changing the generic onchain EIP-3009 facilitator to use
+a different contract. Upstream has already considered and closed that approach.
+
+Keep the career proof concrete: an interoperable Rust seller, a reproducible
+buyer incompatibility, and tests distinguishing accepted payments from final
+onchain settlement. This is evidence for a technical conversation, not a claim
+of Circle endorsement, a production launch, or an accepted contribution.
+
+WHAT IS PUBLIC, AND WHAT IS HOSTED
+
+1. Circle's @circle-fin/x402-batching npm package is at 3.5.0, published
+   2026-09-16. Registry gitHead: 51974f8e817540202aa0758024e336d582cf076b.
+   Its package metadata declares Apache-2.0. No standalone public source
+   repository was identified in its metadata/searches. However, the public
+   tarball contains source maps with sourcesContent: the actual TypeScript
+   for GatewayClient, BatchEvmScheme, BatchFacilitatorClient, middleware,
+   GatewayEvmScheme, hooks and detection was extracted locally for inspection.
+   Do not call this implementation uninspectable or simply closed-source.
+   https://www.npmjs.com/package/@circle-fin/x402-batching
+   https://developers.circle.com/sdks/gateway-nanopayments-sdk
+
+2. Public seller surfaces: createGatewayMiddleware / gateway.require,
+   BatchFacilitatorClient, GatewayEvmScheme, lifecycle hooks. The facilitator
+   client uses /v1/x402/{verify,settle,supported}. The server can be a receive
+   address plus public API integration; it need not hold a buyer private key.
+   https://developers.circle.com/gateway-nanopayments/quickstarts/seller
+   https://developers.circle.com/gateway-nanopayments/howtos/x402-seller
+   https://developers.circle.com/gateway-nanopayments/howtos/facilitator-integration
+
+3. Public buyer surfaces: GatewayClient supplies deposit, pay, balances,
+   withdrawal, searchTransfers and getTransferById. Its high-level constructor
+   still requires a raw privateKey in 3.5.0. The lower-level BatchEvmScheme
+   accepts {address, signTypedData}; custom-signing capability is therefore
+   already present at that layer. A new signer abstraction proposal must
+   account for this, and for deposit/withdraw transaction sending separately.
+
+4. Public app: circlefin/arc-nanopayments is a Next.js/Supabase demonstration,
+   not the Gateway facilitator backend. Default branch has two commits and
+   pins @circle-fin/x402-batching ^2.0.4; the author has an open modernization
+   PR #42 moving it to ^3.5.0 and adding tests. The sample's lib/x402.ts
+   constructs raw Gateway payment requirements and calls the API client.
+   https://github.com/circlefin/arc-nanopayments
+   https://github.com/circlefin/arc-nanopayments/pull/42
+
+5. Public EVM Gateway contracts contain Batches.sol. submitBatch checks the
+   authorized batch signer, destination domain, target Gateway contract,
+   batch-ID replay and net-zero deltas, then applies balance changes. It does
+   not take and verify every buyer's EIP-3009 authorization onchain. The
+   per-authorization checks and ledger admission are on Circle's hosted path.
+   The contract intentionally has an insufficient-balance event path that
+   continues a batch; do not infer a vulnerability from this without analyzing
+   the trusted enclave and ledger invariants.
+   https://github.com/circlefin/evm-gateway-contracts/blob/master/src/modules/wallet/Batches.sol
+   https://github.com/circlefin/evm-gateway-contracts/pull/11
+
+6. Public Solana Gateway programs cover ordinary deposit/burn/mint/withdraw
+   machinery. Their existence does not imply Solana Nanopayments support.
+   Current Nanopayments docs explicitly exclude Solana. EVM Gateway 1.3.0's
+   TEE-backed ERC-1271 support is for standard burn intents; current docs
+   explicitly exclude ERC-1271 from Nanopayments/batch x402.
+   https://github.com/circlefin/solana-gateway-contracts
+   https://developers.circle.com/gateway-nanopayments/supported-networks
+   https://developers.circle.com/gateway/references/erc-1271
+   https://github.com/circlefin/evm-gateway-contracts/pull/14
+
+7. Circle's seller skill explicitly prefers a thin Express payment proxy for
+   non-Node applications unless official native support exists. Circle's
+   agent-stack-starter-kits wrap the CLI/skills in agent framework shells;
+   they do not provide a native Rust seller. A third-party Python SDK already
+   exists, including FastAPI and standard x402 composition, so a generic
+   non-Node gap must not be described as universal.
+   https://github.com/circlefin/skills/blob/master/plugins/circle/skills/accept-agent-payments/SKILL.md
+   https://github.com/circlefin/agent-stack-starter-kits
+   https://github.com/vyperlang/circle-titanoboa-sdk
+
+8. The current canonical general x402 repository is x402-foundation/x402.
+   coinbase/x402 is now a fork; both were inspected, and the canonical source
+   and public PR search were checked before making recommendations.
+   https://github.com/x402-foundation/x402
+
+PAYMENT MECHANISM AND SETTLEMENT BOUNDARIES
+
+Gateway Nanopayments: deposit USDC into GatewayWallet; sign independent
+TransferWithAuthorization messages using the GatewayWalletBatched EIP-712
+domain; submit through Circle; Circle admits/locks payment and later settles
+net balance deltas in a signed batch. Its signing contract differs from the
+USDC asset address. This is not a cumulative payment channel.
+
+The API's verify response is read-only validation. The OpenAPI specification
+says balance and nonce checks occur at settle time, so verify success alone
+does not guarantee payment. Circle's integration docs recommend calling settle
+directly for production Gateway flows. A successful settle response contains
+a transfer UUID in transaction, not a batch transaction hash.
+
+Transfer states are received, batched, confirmed, completed and failed. A
+separate nullable txHash identifies the batch-level onchain transaction. The
+existing reconciliation guide distinguishes acceptance from settlement and
+uses nonce lookup, transfer ID lookup, recipient/date filters and pagination.
+There is already a public API for this; do not propose it as missing.
+https://developers.circle.com/openapi/gateway-nanopayments.yaml
+https://developers.circle.com/gateway-nanopayments/howtos/x402-seller-reconciliation
+https://developers.circle.com/gateway-nanopayments/concepts/batched-settlement
+
+The reconciliation guide's own example still stores ctx.result.transaction as
+txHash and timestamps the acceptance hook as settledAt. A narrow correction
+to transferId/acceptedAt, followed by actual status/txHash observation, would
+align the code with the guide's prose. This is a confirmed example mismatch;
+it is not proof of a hosted accounting defect.
+
+AXP comparison: Akshat explicitly reports that AXP uses BOTH Solana and Tempo
+payment channels. No AXP source was inspected in this assignment. The relevant
+shared idea is amortizing onchain work across many offchain authorizations.
+Reference channel mechanisms use funded channel state and cumulative vouchers,
+with claims/settlement/refunds or close procedures. Gateway instead nets
+independent authorizations via Circle's hosted ledger/enclave infrastructure.
+Do not transfer claims about AXP's exact voucher, recovery, custody, finality or
+performance properties from these reference implementations.
+https://solana.com/news/payment-channels-1-million-payments-per-second
+https://mpp.dev/blog/sessions-improved
+https://github.com/x402-foundation/x402/blob/main/specs/schemes/batch-settlement/scheme_batch_settlement_evm.md
+
+RANKED CONTRIBUTIONS
+
+1. Native Rust/Axum seller example plus Gateway compatibility fixtures.
+   Best initial Circle-specific proof; narrow scope and verified feasibility.
+   Use existing x402-axum and a generic v2 PriceTag preserving the entire
+   Gateway extra object. Configure the Circle /v1/x402/ base correctly and use
+   settle_before_execution. A generic facilitator URL alone is insufficient:
+   the seller must advertise Gateway metadata and use the right order.
+   Deliver one runnable seller, environment-driven receive address/network,
+   bounded integer pricing, startup supported-kind validation, a correct
+   transfer-ID receipt, EOA/network limitations and offline failure fixtures.
+   Include unpaid 402, accepted payment, rejected settlement, mismatched terms,
+   malformed payload, timeouts and acceptance-vs-confirmation cases. No local
+   signer, deposit/withdraw implementation or new SDK is needed for the seller.
+   Candidate home: x402-rs examples with a Circle skill/reference follow-up;
+   actual upstream destination/acceptance remains a maintainer decision.
+   No matching native Rust Gateway seller PR was identified in the inspected
+   Rust PR list, Circle repos or targeted public searches. This is a scoped
+   search result, not proof nobody is working on it privately.
+
+2. Explicit Rust buyer Gateway selection guard / optional Gateway adapter.
+   Stronger library-level engineering follow-up, requiring design alignment.
+   Offline probe confirms V2Eip155ExactClient accepts GatewayWalletBatched as
+   a candidate yet requests a digest using USDC as verifyingContract. It
+   preserves the accepted metadata, so metadata loss is not the problem.
+   First bounded deliverable: explicit unsupported-Gateway rejection or
+   separate Gateway scheme routing with regression fixtures. A full adapter
+   should pin/validate network-domain-contract combinations and authorization
+   validity policy and use Circle's hosted settlement route. Avoid generic
+   trust of a seller-provided verifyingContract. Do not change standard x402
+   onchain settlement to call GatewayWallet.transferWithAuthorization.
+   Crucial existing work: x402-foundation PRs #2885, #3174, #3175 and #3176
+   were closed after this incorrect generic-facilitator premise was rejected.
+   The Rust mismatch is confirmed incompatibility, not a newly discovered
+   exploitable flaw or proof that generic exact must implement Gateway.
+   https://github.com/x402-foundation/x402/pull/3174
+   https://github.com/x402-foundation/x402/pull/3175
+   https://github.com/x402-foundation/x402/pull/2885
+
+3. Acceptance-to-settlement reconciliation example, not a new reconciliation API.
+   Good Circle-focused second contribution if app owners want it.
+   Use the existing transfer UUID/nonce APIs to demonstrate accepted, batched,
+   confirmed, completed, failed and unknown states. Keep transferId separate
+   from batchTxHash; store nonce/network/asset/payer/payee/amount and a durable
+   application correlation ID. Use a restartable paginated read-only worker
+   with fixtures for null txHash, repeated pages, absent attribution, mismatch,
+   delayed settlement and transient API errors. Never infer confirmed from
+   the HTTP response or simply total local payment rows as withdrawable cash.
+   The current app stores settleResult but no authorization nonce, so transfer
+   ID lookup is available, while robust nonce recovery requires a capture
+   change. PR #42 substantially rewrites this app: align rather than fork it.
+   Existing third-party explorers/ledgers mean a broad dashboard would overlap.
+   https://github.com/the-canteen-dev/circle-agent
+   https://github.com/broccolirob/ledgerline
+
+4. Small Rust client feature-build fix with a feature-matrix regression check.
+   Confirmed offline: x402-chain-eip155 with only feature client fails with
+   unresolved tracing in v2_eip155_upto/client.rs at lines 288 and 393, because
+   tracing is optional under telemetry. client+telemetry compiles and runs the
+   buyer probe. This is a genuinely bounded first upstream code fix, but its
+   career signal is lower and it is not Circle-specific. No matching fix was
+   found in the complete 82-PR Rust list inspected. No patch was implemented.
+
+5. Narrow documentation/contract fixtures for authorization validity and receipts.
+   SDK 3.5.0 constants publish a 7-day minimum plus a 100-second buffer; manual
+   signing docs say at least 3 days; the old sample advertises 4 days. Existing
+   sample PRs #23 and #33 already address validity issues, and #42 upgrades
+   SDK dependencies. First establish the intended hosted contract with Circle;
+   do not independently assert which minimum is live. Deliver one consistent
+   policy and matching fixtures/docs, not another duplicate sample PR.
+
+EXISTING WORK THAT SHOULD CHANGE THE PLAN
+
+- circlefin/arc-nanopayments #43 already reports logical-purchase retry safety;
+  #44 and #47 are open implementations. #44 explicitly acknowledges a concurrent
+  check-before-settle race. Its replay branch also re-executes the handler,
+  rather than recovering an exact cached application result. #47's key function
+  hashes payer+endpoint without the Idempotency-Key value and stores state only
+  in memory. These are code-review findings, not live exploit tests. A useful
+  contribution is a race/crash/request-binding test proposal for the existing
+  work, not a third competing idempotency implementation.
+  https://github.com/circlefin/arc-nanopayments/issues/43
+  https://github.com/circlefin/arc-nanopayments/pull/44
+  https://github.com/circlefin/arc-nanopayments/pull/47
+
+- circlefin/skills #50 and open PR #55 already cover retry guidance, durable
+  atomic admission and fingerprint binding. #52 was closed without a merge;
+  its author says there was no maintainer review. Do not mistake an unrelated
+  non-collaborator review in that thread for a Circle policy decision.
+  https://github.com/circlefin/skills/issues/50
+  https://github.com/circlefin/skills/pull/55
+  https://github.com/circlefin/skills/pull/52
+
+- x402-rs #90 and #92 cover the standard batch-settlement channel/voucher
+  scheme. They are not Circle Gateway Nanopayments implementations. #138 and
+  #140 already address broadcast/receipt failure and replayed-settle recovery
+  for onchain EIP-155. #108 covers fresh authorizations on retries; #134 covers
+  missing failure receipt headers; #135 covers payment-response cache policy.
+  A broad retries/recovery patch would overlap existing work.
+  https://github.com/x402-rs/x402-rs/pull/90
+  https://github.com/x402-rs/x402-rs/issues/92
+  https://github.com/x402-rs/x402-rs/pull/138
+  https://github.com/x402-rs/x402-rs/pull/140
+  https://github.com/x402-rs/x402-rs/issues/108
+  https://github.com/x402-rs/x402-rs/issues/134
+
+- solana-foundation/pay #403 requests GatewayWalletBatched client support.
+  It is another sign of the interop boundary, not proof of Rust seller work.
+  https://github.com/solana-foundation/pay/issues/403
+
+- Standard Gateway ERC-1271 expansion is already implemented in the public
+  EVM contracts. Nanopayments explicitly excludes it. Full smart-wallet batch
+  support would involve Circle's hosted validation/enclave and cannot honestly
+  be delivered as a standalone public SDK patch based on this research.
+
+MAINTAINERS AND PUBLIC CONTACT ROUTES
+
+- Marcus Boorstin / mboorstin-circle: authored the merged batch-contract work
+  (#11), and Circle's 2025 Gateway/x402 article. This is direct public evidence
+  of relevant technical work. The article publishes ailabs@circle.com as a
+  team route; its continued responsiveness and present ownership are untested.
+  https://github.com/mboorstin-circle
+  https://www.circle.com/blog/enabling-machine-to-machine-micropayments-with-gateway-and-usdc
+
+- Kevin Smith / ksmith-circle: extensive Gateway commits and approved #11
+  and #14. Calvin Cai / ccai-circle: authored the recent 1.3.0 release PR.
+  CODEOWNERS assigns engineering-vertical-protocols-approvers, rather than
+  naming a single product owner. These are code-backed reviewer routes,
+  not assertions about hiring authority or Devcon attendance.
+  https://github.com/ksmith-circle
+  https://github.com/ccai-circle
+  https://github.com/circlefin/evm-gateway-contracts/blob/master/CODEOWNERS
+
+- Anthony Kelani / akelani-circle: sample author and current #42 proposer;
+  appropriate for sample/example routing. His public profile lists ecosystem
+  growth, so do not equate sample authorship with Gateway protocol ownership.
+  https://github.com/akelani-circle
+
+- Sergey Ukustov / ukstv: current x402-rs lead author, workspace author and
+  dominant commit contributor; relevant for Rust crate/example design.
+  Latest main commit inspected was July 13; many current PRs are still open.
+  Upstream review speed/acceptance cannot be assumed.
+  https://github.com/ukstv
+  https://github.com/x402-rs/x402-rs
+
+- npm registry lists tomleicircle, igaskin-circle and circle-npm-ci as package
+  maintainers. Publisher permissions are not enough to identify the current
+  engineering owner; use the team route to ask for routing when outreach is
+  later authorized. Circle skills are primarily synced from crcl-main/skills,
+  so their public git history does not reveal an individual content owner.
+
+- Preston Vander Vos: official Devcon speaker listing and official Circle
+  Research profile verified. His published focus is distributed systems,
+  markets/DeFi and consensus, with AMP/BlueBottle work. He is a potential
+  introduction, not a verified Gateway maintainer. Devcon's official 2026
+  page lists Circle in the Starter supporter tier. No core Gateway maintainer's
+  Devcon attendance was independently verified.
+  https://devcon.org/en/
+  https://www.circle.com/circle-research
+  https://pvandervos.com/
+
+WHAT WAS ACTUALLY RUN
+
+Public clones (all upstream files preserved): skills, arc-nanopayments,
+evm-gateway-contracts, solana-gateway-contracts, agent-stack-starter-kits,
+x402-rs, coinbase/x402 and canonical x402-foundation/x402. Exact revisions are
+recorded in research-evidence/snapshots.json. A failed initial x402/x402 clone
+was corrected to the actual canonical repository; it is not a source.
+
+Public GitHub metadata: all PR/issue entries for the small Circle repositories,
+all 82 Rust PR entries, most recent 100 Rust issue/PR entries, relevant PR diffs,
+reviews and comments, commit authors and contributors. Filtered canonical
+Gateway and Circle PR searches were read through all 3 and 2 pages respectively.
+The unauthenticated API limit prevented Rust issue page 2 and some later
+review queries; HTML and primary docs/code provided the important follow-ups.
+
+1. Original workspace command cargo test -p x402-axum --offline
+   --no-default-features --lib could not resolve its uncached Aptos merlin git
+   patch in offline mode. No original workspace test suite passed/was claimed.
+
+2. Isolated loopback harness, depending on unmodified x402-rs source:
+   cd research-evidence/rust-probe
+   cargo run --offline --locked --bin circle-research-probe
+   Four PASS observations: unpaid 402 preserves Gateway metadata; successful
+   mock settlement uses correct path and preserves UUID; rejected settlement
+   blocks the handler; modified accepted amount is rejected before API call.
+   Loopback binding needed sandbox escalation. The mock accepts a deliberately
+   fake authorization: this proves HTTP/middleware interoperability, not
+   cryptographic acceptance or real settlement by Circle.
+   Log: research-evidence/rust-probe.log
+
+3. Actual V2Eip155ExactClient with a digest-recording fake signer:
+   cd research-evidence/rust-probe
+   cargo run --offline --locked --bin buyer
+   Confirms Gateway offer selection, digest matching token verifyingContract,
+   digest differing from GatewayWallet verifyingContract, and preservation of
+   the accepted Gateway metadata. No private key exists in this probe and no
+   network operation occurs.
+   Log: research-evidence/rust-buyer-probe.log
+
+4. Reproducible isolated feature build:
+   cargo check --offline --manifest-path research-evidence/feature-probe/Cargo.toml
+   --target-dir research-evidence/rust-probe/target
+   Fails on two unguarded tracing calls with only client enabled. The main
+   buyer probe adds telemetry and passes.
+   Log: research-evidence/rust-client-feature-only-failure.log
+
+Public package dependencies were fetched for compilation. Probe execution
+was offline or loopback-only; it used a separate locked dependency resolution,
+not the original workspace lock and full supported-platform matrix.
+
+Two read-only GET requests to Gateway testnet/mainnet /v1/x402/supported both
+returned HTTP 403 from this environment. No Circle hosted compatibility,
+current runtime-supported-kind list or live validity minimum was established.
+No /verify or /settle request was sent to Circle. No contracts, RPCs, enclaves
+or production payments were exercised. Contract tests were inspected, not run.
+No credentials, funded wallets, external messages, issues, PRs or pushes were
+used or created. No AXP code was inspected. Public source licenses inspected
+declare Apache-2.0; service access and proprietary hosted code remain separate.
+
+NEXT DECISION
+
+Choose the Rust/Axum seller example for the clearest bounded Circle-related
+deliverable. Choose the client feature-build fix for the smallest upstream
+code contribution. Choose explicit Gateway buyer support only if willing to
+align an adapter design with maintainers. Research stops here; no production
+patch has been implemented.

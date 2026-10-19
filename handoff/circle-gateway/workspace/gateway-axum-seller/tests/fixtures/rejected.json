@@ -1,0 +1,6 @@
+{
+  "success": false,
+  "errorReason": "insufficient_balance",
+  "transaction": "",
+  "network": "eip155:5042002"
+}

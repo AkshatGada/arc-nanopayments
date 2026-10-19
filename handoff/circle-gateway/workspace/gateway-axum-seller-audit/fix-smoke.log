@@ -1,0 +1,3 @@
+PASS unpaid HTTP request returns Gateway 402
+PASS synthetic mock acceptance returns quote and UUID receipt
+No live payment, signature verification, or onchain settlement occurred.

@@ -1,0 +1,25 @@
+   Compiling gateway-axum-seller v0.1.0 (/Users/akshat/circle/gateway-axum-seller)
+   Compiling gateway-seller-audit v0.0.0 (/Users/akshat/circle/gateway-axum-seller-audit)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.08s
+     Running tests/repro.rs (/Users/akshat/circle/gateway-axum-seller/target/debug/deps/repro-2d39b6c2d84b8e16)
+
+running 2 tests
+
+thread 'audit_cross_origin_307_is_blocked' (31661223) panicked at tests/repro.rs:565:71:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'audit_http_error_success_body_is_rejected' (31661224) panicked at tests/repro.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+test audit_cross_origin_307_is_blocked ... FAILED
+test audit_http_error_success_body_is_rejected ... FAILED
+
+failures:
+
+failures:
+    audit_cross_origin_307_is_blocked
+    audit_http_error_success_body_is_rejected
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--test repro`

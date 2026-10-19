@@ -1,0 +1,7 @@
+   Compiling circle-research-probe v0.0.0 (/Users/akshat/circle/research-evidence/rust-probe)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.66s
+     Running `target/debug/circle-research-probe`
+PASS unpaid 402 preserves Gateway extra.verifyingContract; handler not run
+PASS paid request forwarded to /v1/x402/settle; UUID receipt survives; no verify call needed
+PASS rejected settlement does not execute handler
+PASS tampered accepted requirements rejected before facilitator call

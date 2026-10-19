@@ -1,0 +1,18 @@
+{
+  "status": 200,
+  "receipt": {
+    "network": "eip155:5042002",
+    "payer": "0x8f80a33830124802d49b49d42806c05c110dcbb8",
+    "success": true,
+    "transaction": "d0b24b1f-cb4f-4d4f-92e2-8b94631457c5"
+  },
+  "cacheControl": "no-store",
+  "data": {
+    "payment": {
+      "network": "eip155:5042002",
+      "status": "accepted",
+      "transferId": "d0b24b1f-cb4f-4d4f-92e2-8b94631457c5"
+    },
+    "quote": "Small steps make progress."
+  }
+}

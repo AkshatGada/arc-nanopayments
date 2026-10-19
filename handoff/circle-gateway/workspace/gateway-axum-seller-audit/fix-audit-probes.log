@@ -1,0 +1,13 @@
+   Compiling gateway-seller-audit v0.0.0 (/Users/akshat/circle/gateway-axum-seller-audit)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.19s
+     Running tests/repro.rs (gateway-axum-seller/target/debug/deps/repro-2d39b6c2d84b8e16)
+
+running 2 tests
+redirected quote status = 502 Bad Gateway, captured settlements = 0
+test audit_cross_origin_307_is_blocked ... ok
+AUDIT upstream=400 Bad Request seller=502 Bad Gateway fulfilled=0
+AUDIT upstream=412 Precondition Failed seller=502 Bad Gateway fulfilled=0
+test audit_http_error_success_body_is_rejected ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.03s
+

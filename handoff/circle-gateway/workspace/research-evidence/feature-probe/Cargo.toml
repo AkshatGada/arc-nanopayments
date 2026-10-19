@@ -1,0 +1,10 @@
+[package]
+name = "circle-feature-research-probe"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+x402-chain-eip155 = { path = "../../research-x402-rs/crates/chains/x402-chain-eip155", features = ["client"] }
+
+[workspace]

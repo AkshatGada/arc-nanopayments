@@ -1,0 +1,155 @@
+{
+  "query": null,
+  "results": [
+    {
+      "number": 3635,
+      "title": "spec(galachain): add exact scheme",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3635"
+    },
+    {
+      "number": 3537,
+      "title": "Create WarpPay402 Gateway configuration file",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3537"
+    },
+    {
+      "number": 3453,
+      "title": "docs(dev-tools): add Host402 autonomous hosting and API monetization platform",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3453"
+    },
+    {
+      "number": 3383,
+      "title": "Add Tollbridge to third-party extensions",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3383"
+    },
+    {
+      "number": 3324,
+      "title": "docs(dev-tools): add 0mod HTTP 402 Gateway & MCP server",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3324"
+    },
+    {
+      "number": 3220,
+      "title": "Add `authority` extension: bounded, offline-verifiable spending mandates",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3220"
+    },
+    {
+      "number": 3176,
+      "title": "fix(evm): sign/verify/settle EIP-3009 payments against extra.verifyingContract (Go)",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3176"
+    },
+    {
+      "number": 3175,
+      "title": "fix(evm): sign/verify/settle EIP-3009 payments against extra.verifyingContract (TS)",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3175"
+    },
+    {
+      "number": 3174,
+      "title": "fix(evm): verify and settle EIP-3009 payments against extra.verifyingContract",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3174"
+    },
+    {
+      "number": 3164,
+      "title": "feat(svm): add batch settlement scheme",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3164"
+    },
+    {
+      "number": 2890,
+      "title": "feat(bsv): add exact scheme support for BSV",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2890"
+    },
+    {
+      "number": 2886,
+      "title": "spec: eip3009-forwarder-split \u2014 atomic non-custodial fee splitting for exact on EVM (with a JPY stablecoin worked example)",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2886"
+    },
+    {
+      "number": 2885,
+      "title": "fix(evm): sign EIP-3009 domain against extra.verifyingContract, not asset",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2885"
+    },
+    {
+      "number": 2806,
+      "title": "Add AgentServices to ecosystem (Services/Endpoints)",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2806"
+    },
+    {
+      "number": 2803,
+      "title": "feat(erc8004): payment-backed feedback for ERC-8004 agents (x402 extension)",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2803"
+    },
+    {
+      "number": 2793,
+      "title": "Add DDG Agent-Payable Services to ecosystem (Services/Endpoints)",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2793"
+    },
+    {
+      "number": 2695,
+      "title": "Add x402 Data Gateway to ecosystem (Services/Endpoints)",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2695"
+    },
+    {
+      "number": 2625,
+      "title": "docs: add GPT-5.5 x402 Gateway ecosystem listing",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2625"
+    },
+    {
+      "number": 2535,
+      "title": "feat(ecosystem): add claw-pay facilitator",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2535"
+    },
+    {
+      "number": 2466,
+      "title": "Add BYTE Library to ecosystem",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2466"
+    },
+    {
+      "number": 2463,
+      "title": "feat(erc8004): v2 ticket flow with X402AgentReputation wrapper",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2463"
+    },
+    {
+      "number": 2422,
+      "title": "Extension: risk-check \u2014 Counterparty risk verification for x402 payments",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2422"
+    },
+    {
+      "number": 2322,
+      "title": "spec(bazaar): add Compliance category with evidenceType, evidenceShape, and anchor_chains constraint",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2322"
+    },
+    {
+      "number": 2254,
+      "title": "ecosystem: add Flipr x402 Agent Gateway",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2254"
+    },
+    {
+      "number": 2234,
+      "title": "feat(examples): add Spraay gateway server \u2014 multi-chain DeFi primitives via x402",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2234"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "status": "completed",
+  "chainId": 5042002,
+  "buyer": "0x8f80a33830124802d49b49d42806c05c110dcbb8",
+  "seller": "0x2ef8a0d57128dedadd287b8ac64a986d6f26f9bf",
+  "amountAtomic": "1000",
+  "amountTestUsdc": "0.001",
+  "transferId": "d0b24b1f-cb4f-4d4f-92e2-8b94631457c5",
+  "nonce": "0x4f1455b3cdd55237f16ebf8d87e43e2f7ea43f26cf62f36a8d7285af2d794013",
+  "batchTxHash": "0x1c154d21215e9680e5c145ccbd16485d4068b98bf55cf7ee928eeab193847527",
+  "batchBlock": "67526714",
+  "batchReceiptStatus": "success",
+  "contractBalancesAtBatchBlock": {
+    "blockNumber": "67526714",
+    "buyerAtomic": "99000",
+    "sellerAtomic": "1000"
+  },
+  "gatewayBuyerAvailable": "0.099",
+  "gatewaySellerAvailable": "0.001",
+  "scope": "One live Arc Testnet payment; no mainnet or withdrawal test; no push or PR"
+}

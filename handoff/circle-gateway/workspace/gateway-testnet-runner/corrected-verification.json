@@ -1,0 +1,13 @@
+{
+  "status": 200,
+  "result": {
+    "isValid": false,
+    "invalidReason": "authorization_validity_too_short",
+    "payer": "0x8f80a33830124802d49b49d42806c05c110dcbb8"
+  },
+  "resource": {
+    "url": "http://127.0.0.1:3000/quote",
+    "description": "One read-only quote; Gateway acceptance precedes delivery",
+    "mimeType": "application/json"
+  }
+}

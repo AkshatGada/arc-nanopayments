@@ -1,0 +1,12 @@
+[
+  {
+    "withTopLevelVersion": true,
+    "status": 400,
+    "response": "{\"success\":false,\"message\":\"Invalid request: paymentPayload.resource.mimeType: Required\"}"
+  },
+  {
+    "withTopLevelVersion": false,
+    "status": 400,
+    "response": "{\"success\":false,\"message\":\"Invalid request: paymentPayload.resource.mimeType: Required\"}"
+  }
+]

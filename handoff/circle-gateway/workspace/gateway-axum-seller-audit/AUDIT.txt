@@ -1,0 +1,91 @@
+Rust/Axum Gateway seller audit — 16 October 2026 (historical, before fixes)
+
+This records the initial findings and pre-fix source hashes. Both findings
+were subsequently addressed locally; see FIX_REAUDIT.txt for current results.
+
+Initial result: two confirmed P2 findings. Neither was fixed during that audit.
+An independent agent reviewed the seller; the parent independently reproduced
+its finding and identified/reproduced the second finding. The implementation
+remains unchanged. All probes use synthetic authorizations and loopback HTTP.
+
+1. [P2] Redirects bypass the configured facilitator origin restriction
+
+Location: gateway-axum-seller/src/lib.rs:57-58
+Related guard: gateway-axum-seller/src/config.rs:81-92
+
+Config validates the initial facilitator URL, but the pinned upstream
+FacilitatorClient constructs Reqwest's default Client, which follows redirects.
+A 307 from POST /v1/x402/settle can replay the full original paymentPayload,
+including its authorization/signature fields, to another origin. A correctly
+shaped receipt from that destination is then accepted by the seller.
+
+Reproduction: the configured loopback mock redirects to a second server on
+another loopback port. The second origin receives the original paymentPayload,
+returns the synthetic accepted receipt, and /quote returns 200.
+Observed: redirected quote status = 200 OK, captured settlements = 1.
+
+Condition/limit: the configured endpoint must issue a redirect. This is not
+evidence that an arbitrary buyer can choose a redirect destination, nor that
+Circle currently redirects payments. No real signature or payment was used.
+
+Suggested correction: disable redirects for Gateway discovery/settlement, or
+enforce the configured origin and secure scheme on every redirect hop. The
+upstream client currently exposes no injected HTTP client/redirect policy, so
+this needs a transport API adjustment or a strict local Gateway transport.
+Add negative 307/308 cases asserting zero destination calls and no fulfillment.
+
+2. [P2] HTTP error responses can still release paid content
+
+Location: gateway-axum-seller/src/lib.rs:155-157
+Dependency: pinned x402-axum src/facilitator_client.rs:399-405
+
+The generic upstream client deserializes HTTP 200, 400 and 412 into the same
+settlement wrapper, discarding the status. GatewayFacilitator then accepts a
+body with success:true and the expected payer/network/UUID. Consequently an
+HTTP error status with a success-shaped body still runs the handler and returns
+200 with an acceptance receipt. The current tests cover HTTP 500 success-shaped
+bodies but miss 400 and 412.
+
+Observed independently for each response:
+  upstream=400 Bad Request seller=200 OK fulfilled=1
+  upstream=412 Precondition Failed seller=200 OK fulfilled=1
+
+Condition/limit: the trusted endpoint must produce an inconsistent error-status
+and success-body response. This is a confirmed failure to reject contradictory
+upstream results, not an unauthenticated buyer payment bypass against Circle.
+
+Suggested correction: require HTTP 200 for successful Gateway acceptance
+before interpreting the receipt, preserving status metadata through transport.
+Add 400/412 success-shaped-body tests expecting no handler execution and a
+redacted failure response without a fresh payment offer.
+
+Run the two retained probes, now converted to assert the fixed behavior:
+
+  cd /Users/akshat/circle/gateway-axum-seller-audit
+  cargo test --offline --locked --test repro audit_ -- --nocapture
+
+The original pre-fix reproductions.log preserves the broken behavior observed
+at the source hashes below. The two audit tests now expect HTTP 502, no new
+payment challenge, no fulfillment and no cross-origin request. The copied
+baseline tests provide the same helpers/fixtures; filter audit_ to run only
+the two focused probes.
+
+Other checks:
+- The independent agent reran the original 14 tests: all pass.
+- Nested /api/quote HEAD, POST, OPTIONS and DELETE were confirmed to return
+  405 with zero settlement calls; the method guard holds in that case.
+- A suspected multiple-trailing-slash URL issue was disproved: the upstream
+  constructor normalizes it correctly. It is excluded from findings.
+- No additional substantive defect was confirmed in immutable offer matching
+  or receipt field validation within this local example's scope.
+- Documented absence of durable purchase recovery, live crypto verification,
+  and hosted Circle/onchain validation is a scope limitation, not a new finding.
+
+Audited source SHA256 (independent copy and actual package matched):
+src/lib.rs    6b7ea0b26ba1757f7e79aa1fa5bdb6cd709f6d23f1853b6dbc7f71ca3a9d662d
+src/config.rs 90ddb003504d6dc66daa7ae8006f01f1dfee05b2c0f10bfacee77f6d4f8a4fec
+src/main.rs   5975b5c93f344bde96de78af7ed257d0cc730b390ae81e77f8ccc3ce56af0a94
+
+No implementation source edits, credentials, hosted Circle calls, live payments,
+pushes, issues, PRs or external messages were made. Sandbox escalation only
+enabled localhost listeners for the safe probes.

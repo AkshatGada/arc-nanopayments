@@ -1,0 +1,513 @@
+openapi: 3.0.3
+info:
+  title: Gateway Nanopayments
+  version: 1.0.0
+  description: |
+    Gateway Nanopayments settles gasless USDC payments for the x402 protocol using Circle Gateway's batched settlement infrastructure. Sellers verify buyer authorizations and settle net positions in bulk onchain.
+servers:
+  - url: https://gateway-api-testnet.circle.com
+  - url: https://gateway-api.circle.com
+tags:
+  - name: Settlement
+    description: Verify buyer-signed x402 authorizations and submit them for batched settlement through Circle Gateway.
+  - name: Batched transfers
+    description: Query the batched USDC transfers Gateway settles from accepted x402 authorizations.
+  - name: Supported payment kinds
+    description: Discover the x402 payment schemes and networks this facilitator supports.
+paths:
+  /v1/x402/settle:
+    post:
+      summary: Settle an x402 payment
+      description: |
+        Settles an x402 payment by submitting the EIP-3009 authorization.
+        The authorization will be verified, the sender's balance locked, and
+        the transaction queued for batch processing.
+      operationId: SettleX402Payment
+      tags:
+        - Settlement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paymentPayload:
+                  $ref: '#/components/schemas/PaymentPayload'
+                paymentRequirements:
+                  $ref: '#/components/schemas/PaymentRequirements'
+              required:
+                - paymentPayload
+                - paymentRequirements
+      responses:
+        '200':
+          description: Settlement result. Check the success field for outcome.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - transaction
+                  - network
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether the settlement was successful.
+                  errorReason:
+                    type: string
+                    description: Error code. Present when success is false.
+                    enum:
+                      - unsupported_scheme
+                      - unsupported_network
+                      - unsupported_asset
+                      - invalid_payload
+                      - address_mismatch
+                      - amount_mismatch
+                      - invalid_signature
+                      - authorization_not_yet_valid
+                      - authorization_expired
+                      - authorization_validity_too_short
+                      - self_transfer
+                      - insufficient_balance
+                      - nonce_already_used
+                      - unsupported_domain
+                      - wallet_not_found
+                  payer:
+                    type: string
+                    description: The sender address (present on success or when identifiable).
+                  transaction:
+                    type: string
+                    description: Transaction UUID on success, empty string on failure.
+                  network:
+                    type: string
+                    description: CAIP-2 network identifier.
+        '400':
+          description: Invalid or malformed request body
+        '500':
+          description: Unexpected infrastructure error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - errorReason
+                  - transaction
+                  - network
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  errorReason:
+                    type: string
+                    example: unexpected_error
+                  transaction:
+                    type: string
+                    example: ''
+                  network:
+                    type: string
+  /v1/x402/verify:
+    post:
+      summary: Verify an x402 payment payload
+      description: |
+        Verifies that an x402 payment payload can be processed by running
+        all read-only validation checks (scheme, network, token, signature,
+        temporal constraints, address/amount matching). A valid result does
+        not guarantee settlement — balance and nonce checks only happen at
+        settle time.
+      operationId: VerifyX402Payment
+      tags:
+        - Settlement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paymentPayload:
+                  $ref: '#/components/schemas/PaymentPayload'
+                paymentRequirements:
+                  $ref: '#/components/schemas/PaymentRequirements'
+              required:
+                - paymentPayload
+                - paymentRequirements
+      responses:
+        '200':
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isValid:
+                    type: boolean
+                    description: Whether the payment payload passed all validation checks.
+                  invalidReason:
+                    type: string
+                    description: Reason for validation failure. Present when isValid is false.
+                  payer:
+                    type: string
+                    description: The payer address extracted from the payment payload.
+        '400':
+          description: Invalid or malformed request body
+  /v1/x402/transfers:
+    get:
+      summary: Search x402 transfers
+      description: |
+        Returns a paginated list of x402 transfers matching the given filters.
+        Supports cursor-based pagination via pageAfter / pageBefore.
+
+        Filtering by `status` requires at least one of `from`, `to`, or `nonce`
+        in the same request. If you supply `status` on its own, or alongside
+        only `network`, `token`, or a date range, the request returns `400`.
+        Searching every transfer in a given status isn't supported.
+      operationId: SearchX402Transfers
+      tags:
+        - Batched transfers
+      parameters:
+        - in: query
+          name: from
+          schema:
+            type: string
+          description: Filter by sender address.
+        - in: query
+          name: to
+          schema:
+            type: string
+          description: Filter by recipient address.
+        - in: query
+          name: network
+          schema:
+            type: string
+          description: Filter by CAIP-2 network identifier (e.g., eip155:11155111).
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - received
+              - batched
+              - confirmed
+              - completed
+              - failed
+          description: Filter by transfer status. Requires at least one of `from`, `to`, or `nonce` in the same request; otherwise the request returns `400`.
+        - in: query
+          name: token
+          schema:
+            type: string
+            enum:
+              - USDC
+          description: Filter by token type.
+        - in: query
+          name: nonce
+          schema:
+            type: string
+          description: Filter by EIP-3009 nonce.
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date-time
+          description: Filter transfers created on or after this date.
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date-time
+          description: Filter transfers created on or before this date.
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+          description: Number of results per page.
+        - in: query
+          name: pageAfter
+          schema:
+            type: string
+          description: Cursor for the next page of results.
+        - in: query
+          name: pageBefore
+          schema:
+            type: string
+          description: Cursor for the previous page of results.
+      responses:
+        '200':
+          description: Paginated list of transfers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transfers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/X402TransferResponse'
+        '400':
+          description: Invalid request parameters
+  /v1/x402/transfers/{id}:
+    get:
+      summary: Get an x402 transfer by ID
+      description: Retrieves a single x402 transfer by its unique identifier.
+      operationId: GetX402TransferById
+      tags:
+        - Batched transfers
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Transfer UUID.
+      responses:
+        '200':
+          description: The transfer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/X402TransferResponse'
+        '404':
+          description: Transfer not found
+  /v1/x402/supported:
+    get:
+      summary: Get supported x402 payment kinds
+      description: |
+        Returns the payment kinds supported by Circle Gateway for x402 batching.
+
+        Each kind includes the GatewayWallet contract address in
+        `extra.verifyingContract` which clients use for EIP-712 signing, and an
+        `extra.assets` array containing the supported tokens with their addresses,
+        symbols, and decimals.
+      operationId: GetSupportedX402PaymentKinds
+      tags:
+        - Supported payment kinds
+      responses:
+        '200':
+          description: Supported payment kinds
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kinds:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        x402Version:
+                          type: number
+                          description: x402 protocol version.
+                        scheme:
+                          type: string
+                          description: Payment scheme identifier.
+                        network:
+                          type: string
+                          description: Network identifier.
+                        extra:
+                          type: object
+                          description: Scheme-specific details including contract and token info.
+                          properties:
+                            name:
+                              type: string
+                              description: Contract name for EIP-712 signing.
+                            version:
+                              type: string
+                              description: Contract version for EIP-712 signing.
+                            verifyingContract:
+                              type: string
+                              description: GatewayWallet contract address used for EIP-712 signing.
+                            assets:
+                              type: array
+                              description: List of supported tokens on this network.
+                              items:
+                                type: object
+                                properties:
+                                  address:
+                                    type: string
+                                    description: Token contract address (lowercase).
+                                  symbol:
+                                    type: string
+                                    description: Token symbol (e.g., USDC).
+                                  decimals:
+                                    type: number
+                                    description: Token decimals (e.g., 6 for USDC).
+                  extensions:
+                    type: array
+                    description: Supported protocol extensions.
+                    items:
+                      type: string
+                  signers:
+                    type: object
+                    description: Mapping of network identifiers to arrays of authorized signer addresses.
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: PREFIX:ID:SECRET
+      description: Circle's API Keys are formatted in the following structure "PREFIX:ID:SECRET". All three parts are required to make a successful request.
+  schemas:
+    ResourceInfo:
+      type: object
+      description: Information about the resource being paid for in an x402 payment.
+      properties:
+        url:
+          type: string
+          description: URL of the resource.
+        description:
+          type: string
+          description: Human-readable description of the resource.
+        mimeType:
+          type: string
+          description: Expected MIME type of the response.
+      required:
+        - url
+    PaymentRequirements:
+      type: object
+      description: Defines an acceptable way to pay for a resource using the x402 protocol.
+      properties:
+        scheme:
+          type: string
+          description: Payment scheme identifier (e.g., "exact").
+          example: exact
+        network:
+          type: string
+          description: Network identifier (e.g., "base-sepolia", "base").
+          example: base-sepolia
+        asset:
+          type: string
+          description: Token contract address or symbol.
+          example: '0x036CbD53842c5426634e7929541eC2318f3dCF7e'
+        amount:
+          type: string
+          description: Payment amount in atomic units (e.g., wei). For USDC, 1000000 = 1 USDC.
+          example: '1000000'
+        payTo:
+          type: string
+          description: Address to receive the payment.
+          example: '0x1234567890abcdef1234567890abcdef12345678'
+        maxTimeoutSeconds:
+          type: integer
+          description: Maximum time in seconds for the payment to be valid.
+          example: 3600
+        extra:
+          type: object
+          description: Scheme-specific additional parameters.
+          additionalProperties: true
+      required:
+        - scheme
+        - network
+        - asset
+        - amount
+        - payTo
+        - maxTimeoutSeconds
+    PaymentPayload:
+      type: object
+      description: x402 payment payload containing the payment authorization and metadata.
+      properties:
+        x402Version:
+          type: integer
+          description: Version of the x402 protocol.
+          example: 1
+        resource:
+          $ref: '#/components/schemas/ResourceInfo'
+          description: Information about the resource being paid for.
+        accepted:
+          $ref: '#/components/schemas/PaymentRequirements'
+          description: The payment requirements that were accepted by the client.
+        payload:
+          type: object
+          description: Scheme-specific payment data (e.g., EIP-3009 authorization).
+          additionalProperties: true
+        extensions:
+          type: object
+          description: Optional protocol extensions.
+          additionalProperties: true
+      required:
+        - x402Version
+        - accepted
+        - payload
+    X402TransferResponse:
+      type: object
+      description: Response containing details of an x402 transfer.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the transfer.
+        status:
+          type: string
+          enum:
+            - received
+            - batched
+            - confirmed
+            - completed
+            - failed
+          description: |
+            Current status of the x402 transfer:
+
+            - `received`: Transfer has been submitted and accepted
+            - `batched`: Transfer has been included in a batch for processing
+            - `confirmed`: Transfer has been confirmed onchain
+            - `completed`: Transfer is fully complete
+            - `failed`: Transfer has failed
+        token:
+          type: string
+          description: Token symbol (e.g., USDC).
+          example: USDC
+        sendingNetwork:
+          type: string
+          description: CAIP-2 network identifier for the sending chain.
+          example: eip155:11155111
+        recipientNetwork:
+          type: string
+          description: CAIP-2 network identifier for the recipient chain.
+          example: eip155:11155111
+        fromAddress:
+          type: string
+          description: Sender address.
+        toAddress:
+          type: string
+          description: Recipient address.
+        amount:
+          type: string
+          description: Transfer amount in atomic units.
+        nonce:
+          type: string
+          description: EIP-3009 nonce.
+        txHash:
+          type: string
+          nullable: true
+          description: Batch-level settlement transaction hash, shared by all transfers in the same batch. Remains null until included in a batch with a settlement transaction hash.
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the transfer was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the transfer was last updated.
+      required:
+        - id
+        - status
+        - token
+        - sendingNetwork
+        - recipientNetwork
+        - fromAddress
+        - toAddress
+        - amount
+        - nonce
+        - txHash
+        - createdAt
+        - updatedAt

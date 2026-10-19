@@ -1,0 +1,14 @@
+{
+  "id": "d0b24b1f-cb4f-4d4f-92e2-8b94631457c5",
+  "status": "completed",
+  "token": "USDC",
+  "sendingNetwork": "eip155:5042002",
+  "recipientNetwork": "eip155:5042002",
+  "fromAddress": "0x8f80a33830124802d49b49d42806c05c110dcbb8",
+  "toAddress": "0x2ef8a0d57128dedadd287b8ac64a986d6f26f9bf",
+  "amount": "1000",
+  "nonce": "0x4f1455b3cdd55237f16ebf8d87e43e2f7ea43f26cf62f36a8d7285af2d794013",
+  "txHash": "0x1c154d21215e9680e5c145ccbd16485d4068b98bf55cf7ee928eeab193847527",
+  "createdAt": "2026-10-16T16:08:57.953Z",
+  "updatedAt": "2026-10-16T16:23:03.275Z"
+}

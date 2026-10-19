@@ -1,0 +1,82 @@
+[
+  {
+    "directory": "research-arc-nanopayments",
+    "head": "a29f920ed8eef89bec36d5138892c72b13759710",
+    "branch": "master",
+    "origin": "https://github.com/circlefin/arc-nanopayments.git",
+    "shallow": true,
+    "archive": "repository-snapshots/research-arc-nanopayments.git.tar.gz",
+    "archive_sha256": "f1119531741f0219fa1e004ee1275a0d5d4fce04b053b8c487d927ecfabe0538",
+    "status": "clean; no stashes or ignored files"
+  },
+  {
+    "directory": "research-evm-gateway",
+    "head": "c21d2d2e356d6566b6c7c3dde7ebcbdf1747590b",
+    "branch": "master",
+    "origin": "https://github.com/circlefin/evm-gateway-contracts.git",
+    "shallow": true,
+    "archive": "repository-snapshots/research-evm-gateway.git.tar.gz",
+    "archive_sha256": "26dca89776e94c0132a0326a92c1ce8efa4364de713b7d2ef95566cb9137d325",
+    "status": "clean; no stashes or ignored files"
+  },
+  {
+    "directory": "research-skills",
+    "head": "04cbd18fdf7e2e459452f2a94594fb5c526d9908",
+    "branch": "master",
+    "origin": "https://github.com/circlefin/skills.git",
+    "shallow": true,
+    "archive": "repository-snapshots/research-skills.git.tar.gz",
+    "archive_sha256": "7e59e2afa18c2621f68224d84efd385b4db20b3907c26e7b879d91e9230c96ca",
+    "status": "clean; no stashes or ignored files"
+  },
+  {
+    "directory": "research-solana-gateway",
+    "head": "909373cdee3aad9e06fe37b599f9d29160f7ca4c",
+    "branch": "master",
+    "origin": "https://github.com/circlefin/solana-gateway-contracts.git",
+    "shallow": true,
+    "archive": "repository-snapshots/research-solana-gateway.git.tar.gz",
+    "archive_sha256": "6eec9234bdd2680f340c510b20f82a12a5b44d1696c8b75c40c2e1ef8b593e18",
+    "status": "clean; no stashes or ignored files"
+  },
+  {
+    "directory": "research-starter-kits",
+    "head": "39963306050b1581e1e00ae82de2a6fa57bbb428",
+    "branch": "master",
+    "origin": "https://github.com/circlefin/agent-stack-starter-kits.git",
+    "shallow": true,
+    "archive": "repository-snapshots/research-starter-kits.git.tar.gz",
+    "archive_sha256": "81910a9281adf55eba1057669f14d379edcb62e30ae7f3313eedcff5fa705834",
+    "status": "clean; no stashes or ignored files"
+  },
+  {
+    "directory": "research-x402",
+    "head": "0e6e8c55d86b4f14234fb6e49a4052074fb93e57",
+    "branch": "main",
+    "origin": "https://github.com/coinbase/x402.git",
+    "shallow": true,
+    "archive": "repository-snapshots/research-x402.git.tar.gz",
+    "archive_sha256": "9522ff8fdefdba0a3a3610479808f862580b9d082faa59121c3f183dba75fb7d",
+    "status": "clean; no stashes or ignored files"
+  },
+  {
+    "directory": "research-x402-foundation",
+    "head": "faa1c694c66a3732aaabbce93bdae140e521a67d",
+    "branch": "main",
+    "origin": "https://github.com/x402-foundation/x402.git",
+    "shallow": true,
+    "archive": "repository-snapshots/research-x402-foundation.git.tar.gz",
+    "archive_sha256": "e56dc1a59d792e90c9f9b5928d4c6d2e1af3346b95e00c6cac783e570b31ffff",
+    "status": "clean; no stashes or ignored files"
+  },
+  {
+    "directory": "research-x402-rs",
+    "head": "e75adda8a0e3cf23db446883ba91b88bbab2fe28",
+    "branch": "main",
+    "origin": "https://github.com/x402-rs/x402-rs.git",
+    "shallow": true,
+    "archive": "repository-snapshots/research-x402-rs.git.tar.gz",
+    "archive_sha256": "edc17c46dd58690487ccb58327e8b9afb929d3e12ebdb0a97f983678c416c6a7",
+    "status": "clean; no stashes or ignored files"
+  }
+]

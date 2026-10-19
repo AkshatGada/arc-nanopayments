@@ -1,0 +1,139 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.72s
+     Running unittests src/lib.rs (target/debug/deps/gateway_axum_seller-0a2640b0c4fb7893)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/gateway_axum_seller-8a0ef21a8bd990f8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/compatibility.rs (target/debug/deps/compatibility-4c25f2c8752582aa)
+
+running 17 tests
+test configuration_rejects_wrong_networks_money_formats_and_remote_mocks ... ok
+test infrastructure_and_parse_errors_are_redacted_and_not_retried ... FAILED
+test altered_payment_terms_never_reach_gateway_or_handler ... FAILED
+test accepted_payment_is_forwarded_once_and_receipt_remains_an_acceptance ... FAILED
+test discovery_supports_contract_only_metadata_and_preserves_additional_fields ... FAILED
+test base_sepolia_offer_uses_its_own_asset_and_never_advertises_arc ... FAILED
+test discovery_requires_the_configured_network_scheme_version_and_contract ... FAILED
+test challenge_preserves_gateway_domain_integer_price_and_resource ... FAILED
+test gateway_rejection_prevents_fulfillment_and_does_not_issue_a_new_offer ... FAILED
+test malformed_and_legacy_headers_never_reach_gateway ... FAILED
+test failed_or_malformed_discovery_does_not_start_a_seller ... FAILED
+test invalid_success_receipts_are_not_treated_as_payment_acceptance ... FAILED
+test signed_head_post_and_options_cannot_trigger_a_payment ... FAILED
+test transport_does_not_follow_discovery_redirects ... FAILED
+test timeout_after_submission_is_unknown_and_does_not_trigger_second_settlement ... FAILED
+test transport_does_not_follow_settlement_redirects ... FAILED
+test transport_rejects_non_200_success_bodies ... FAILED
+
+failures:
+
+---- infrastructure_and_parse_errors_are_redacted_and_not_retried stdout ----
+
+thread 'infrastructure_and_parse_errors_are_redacted_and_not_retried' (31659197) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- altered_payment_terms_never_reach_gateway_or_handler stdout ----
+
+thread 'altered_payment_terms_never_reach_gateway_or_handler' (31659189) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- accepted_payment_is_forwarded_once_and_receipt_remains_an_acceptance stdout ----
+
+thread 'accepted_payment_is_forwarded_once_and_receipt_remains_an_acceptance' (31659188) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- discovery_supports_contract_only_metadata_and_preserves_additional_fields stdout ----
+
+thread 'discovery_supports_contract_only_metadata_and_preserves_additional_fields' (31659194) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- base_sepolia_offer_uses_its_own_asset_and_never_advertises_arc stdout ----
+
+thread 'base_sepolia_offer_uses_its_own_asset_and_never_advertises_arc' (31659190) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- discovery_requires_the_configured_network_scheme_version_and_contract stdout ----
+
+thread 'discovery_requires_the_configured_network_scheme_version_and_contract' (31659193) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- challenge_preserves_gateway_domain_integer_price_and_resource stdout ----
+
+thread 'challenge_preserves_gateway_domain_integer_price_and_resource' (31659191) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- gateway_rejection_prevents_fulfillment_and_does_not_issue_a_new_offer stdout ----
+
+thread 'gateway_rejection_prevents_fulfillment_and_does_not_issue_a_new_offer' (31659196) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- malformed_and_legacy_headers_never_reach_gateway stdout ----
+
+thread 'malformed_and_legacy_headers_never_reach_gateway' (31659199) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- failed_or_malformed_discovery_does_not_start_a_seller stdout ----
+
+thread 'failed_or_malformed_discovery_does_not_start_a_seller' (31659195) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- invalid_success_receipts_are_not_treated_as_payment_acceptance stdout ----
+
+thread 'invalid_success_receipts_are_not_treated_as_payment_acceptance' (31659198) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- signed_head_post_and_options_cannot_trigger_a_payment stdout ----
+
+thread 'signed_head_post_and_options_cannot_trigger_a_payment' (31659200) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- transport_does_not_follow_discovery_redirects stdout ----
+
+thread 'transport_does_not_follow_discovery_redirects' (31659217) panicked at tests/compatibility.rs:600:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- timeout_after_submission_is_unknown_and_does_not_trigger_second_settlement stdout ----
+
+thread 'timeout_after_submission_is_unknown_and_does_not_trigger_second_settlement' (31659201) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- transport_does_not_follow_settlement_redirects stdout ----
+
+thread 'transport_does_not_follow_settlement_redirects' (31659219) panicked at tests/compatibility.rs:600:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- transport_rejects_non_200_success_bodies stdout ----
+
+thread 'transport_rejects_non_200_success_bodies' (31659220) panicked at tests/compatibility.rs:92:75:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+
+failures:
+    accepted_payment_is_forwarded_once_and_receipt_remains_an_acceptance
+    altered_payment_terms_never_reach_gateway_or_handler
+    base_sepolia_offer_uses_its_own_asset_and_never_advertises_arc
+    challenge_preserves_gateway_domain_integer_price_and_resource
+    discovery_requires_the_configured_network_scheme_version_and_contract
+    discovery_supports_contract_only_metadata_and_preserves_additional_fields
+    failed_or_malformed_discovery_does_not_start_a_seller
+    gateway_rejection_prevents_fulfillment_and_does_not_issue_a_new_offer
+    infrastructure_and_parse_errors_are_redacted_and_not_retried
+    invalid_success_receipts_are_not_treated_as_payment_acceptance
+    malformed_and_legacy_headers_never_reach_gateway
+    signed_head_post_and_options_cannot_trigger_a_payment
+    timeout_after_submission_is_unknown_and_does_not_trigger_second_settlement
+    transport_does_not_follow_discovery_redirects
+    transport_does_not_follow_settlement_redirects
+    transport_rejects_non_200_success_bodies
+
+test result: FAILED. 1 passed; 16 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `--test compatibility`

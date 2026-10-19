@@ -1,0 +1,68 @@
+Local fixes and independent re-audit — 16 October 2026
+
+Status: both original P2 findings fixed locally. No push or PR.
+
+Changes in gateway-axum-seller:
+- New private src/transport.rs replaces the generic HTTP client for Gateway
+  API calls while retaining the pinned x402-rs payment middleware unchanged.
+- Reqwest redirect policy is none for every request. No same-origin or
+  cross-origin redirects are followed, so authorizations are not forwarded.
+- Automatic HTTP retries are explicitly disabled and the configured request
+  timeout remains enforced.
+- Every response must be HTTP 200 before JSON is parsed, including discovery,
+  verification and settlement. HTTP 400/412 success-shaped bodies cannot be
+  interpreted as acceptance. Error bodies and Location headers are not exposed.
+- Discovery capabilities are captured at startup for this static-offer seller.
+- Cargo.toml/Cargo.lock now declare reqwest directly; no upstream patches.
+
+Regression evidence:
+- Before implementation, all three new transport tests failed against the
+  previous code. fix-regression-before.log records the original failures.
+- Final seller suite: 17 tests pass, 0 fail. Tests cover redirects with
+  301/302/303/307/308 in discovery and settlement, requiring zero requests to
+  the other origin, and non-200 success bodies including 400/412 and 201/202.
+- Existing quote acceptance, payload forwarding, field validation, method
+  rejection, timeout and configuration behavior still pass.
+- The original two audit probes were converted into fixed-behavior assertions
+  in this separate audit workspace. Both pass:
+    Cross-origin 307 -> seller 502; captured settlements 0.
+    HTTP 400 -> seller 502; fulfilled 0; one submission.
+    HTTP 412 -> seller 502; fulfilled 0; one submission.
+- Formatting, Clippy all-targets with -D warnings, locked offline binary/example
+  build and the rebuilt HTTP mock smoke demo all pass.
+
+Independent reviewer: the same agent that reported the original redirect bug
+reviewed the updated actual package without editing implementation files.
+It reran the seller checks and a separate harness importing the actual package.
+It confirmed both fixes, zero redirected requests, zero fulfillment on 400/412,
+and continued nested method rejection. No further concrete regression found.
+Its raw report is saved as independent-reaudit.txt beside this file.
+
+Relevant files and logs:
+  ../gateway-axum-seller/src/transport.rs
+  ../gateway-axum-seller/src/lib.rs
+  ../gateway-axum-seller/tests/compatibility.rs
+  fix-regression-before.log
+  fix-regression-after.log
+  fix-audit-probes.log
+  fix-clippy.log
+  fix-build.log
+  fix-smoke.log
+
+Reproduce current checks:
+  cd /Users/akshat/circle/gateway-axum-seller
+  cargo test --offline --locked --all-targets
+  cargo fmt --all --check
+  cargo clippy --offline --locked --all-targets -- -D warnings
+
+Original audit probes, now regression assertions:
+  cd /Users/akshat/circle/gateway-axum-seller-audit
+  cargo test --offline --locked --test repro audit_ -- --nocapture
+
+The historical AUDIT.txt and reproductions.log preserve the pre-fix findings
+and results. Their old source hashes describe the initial implementation.
+
+All runtime tests used synthetic fixtures and loopback servers. No Circle
+hosted request, signature verification, funded wallet, live payment, onchain
+settlement, credentials, external outreach, issue, push or PR was performed.
+Both smoke server processes were stopped and waited for afterward.

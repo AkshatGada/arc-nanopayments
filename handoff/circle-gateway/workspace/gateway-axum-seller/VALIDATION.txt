@@ -1,0 +1,55 @@
+Offline/audit verification: 16 October 2026
+
+These checks use synthetic fixtures. The subsequent live Circle testnet run
+and its separate settlement evidence are recorded in LIVE_TESTNET.txt.
+
+Implementation location: /Users/akshat/circle/gateway-axum-seller
+Upstream: x402-rs/x402-rs e75adda8a0e3cf23db446883ba91b88bbab2fe28
+No upstream source changes. Cargo dependencies use that exact git revision.
+
+PASS cargo test --offline --locked --all-targets
+     17 compatibility tests passed; 0 failed.
+     Fixtures use actual loopback HTTP transport and deliberately fake signatures.
+     Includes negative terms, malformed headers/receipts, discovery failures,
+     rejected payment, HTTP failure, timeout after submission, no automatic retry,
+     UUID acceptance semantics, testnet configuration and signed HEAD rejection.
+     New regressions reject discovery/settlement redirects (301/302/303/307/308)
+     with zero destination requests, and reject success-shaped bodies on HTTP
+     400/412 and other non-200 statuses with no content fulfillment.
+
+PASS regression failure proof before the fixes:
+     The three new regression tests first failed against the prior code.
+     Evidence: ../gateway-axum-seller-audit/fix-regression-before.log
+
+PASS original audit probes after conversion to regression assertions:
+     Cross-origin 307 -> seller 502; destination requests 0.
+     HTTP 400/412 success:true -> seller 502; fulfilled 0; submissions 1.
+     Evidence: ../gateway-axum-seller-audit/fix-audit-probes.log
+
+PASS independent re-audit by the original audit agent:
+     Both findings verified fixed; no further concrete regression found.
+     Actual package checks and independent probes passed.
+     Evidence: ../gateway-axum-seller-audit/FIX_REAUDIT.txt
+
+PASS cargo fmt --all --check
+PASS cargo clippy --offline --locked --all-targets -- -D warnings
+PASS cargo build --offline --locked --bins --examples
+PASS python3 -m py_compile scripts/offline_smoke.py
+
+PASS HTTP smoke using compiled mock_gateway and gateway-axum-seller binaries:
+     PASS unpaid HTTP request returns Gateway 402
+     PASS synthetic mock acceptance returns quote and UUID receipt
+     No live payment, signature verification, or onchain settlement occurred.
+
+The demo used 127.0.0.1:4020 (mock) and 127.0.0.1:3000 (seller).
+Both child processes were terminated and waited for after the smoke check.
+The test suite binds ephemeral loopback ports. Sandbox escalation was needed
+to allow local listening sockets; no hosted payment endpoints were contacted.
+
+Public git and crates.io downloads were used to fetch build dependencies.
+No private keys, credentials, RPC operations, wallet funding, live /verify or
+/settle calls, Git pushes, issues or PRs were used or created.
+
+Limits: synthetic contract compatibility, not live Circle interoperability.
+No onchain confirmation, cryptographic verification, durable purchase recovery
+or production deployment is established. See README.md and fixture provenance.

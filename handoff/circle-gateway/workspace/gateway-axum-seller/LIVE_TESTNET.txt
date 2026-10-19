@@ -1,0 +1,96 @@
+Circle Gateway live testnet run — 16 October 2026
+
+Final status: live paid HTTP flow AND onchain batch settlement verified.
+Circle reports completed; the successful batch receipt, matching net deltas,
+contract balances at that block, and final Gateway balances were verified.
+
+Environment
+- Network: Arc Testnet, chain ID 5042002, Gateway domain 26.
+- RPC: https://rpc.testnet.arc.io, verified against Arc's current official
+  RPC reference and a live eth_chainId request. SDK 3.5.0's default .network
+  hostname failed DNS in this environment, so rpcUrl was explicitly overridden.
+- Seller: the local Rust/Axum binary using Circle's hosted testnet API.
+- Buyer signing: @circle-fin/x402-batching 3.5.0 BatchEvmScheme, with pinned
+  @x402/core 2.3.0, @x402/evm 2.3.0 and viem 2.52.0 in a separate local runner.
+- Fresh buyer: 0x8F80A33830124802d49B49D42806c05C110dCBb8
+- Fresh seller: 0x2EF8A0d57128DEdaDD287b8AC64A986d6f26f9Bf
+- Keys and signed payloads are stored only in the runner's ignored .secrets
+  directory (0700; key file 0600). They are excluded from public evidence.
+
+Funding/deposit confirmed
+- Circle's public faucet sent 20 test USDC; no real-value funds were used.
+- Approval was limited to 0.1 test USDC (100000 atomic units).
+- Gateway deposit: exactly 0.1 test USDC, confirmed successfully onchain.
+- Approval tx: 0xe9a734aa3dd7d0a4e0d52875e3ba70467a4ca87f1b13c56829de9b40abded23e
+- Deposit tx: 0x8497c70cf6d27d589ca33fdef59f5e2dd3018d53db227444495544accab46c10
+- Both transaction inputs were independently decoded; amounts were 100000.
+- Gateway available balance became 0.1 before the purchase.
+
+Live compatibility issue found and fixed
+- The initial seller challenge omitted resource.mimeType because the generic
+  x402-rs type treats it as optional. Circle rejected the request with HTTP 400:
+  "Invalid request: paymentPayload.resource.mimeType: Required".
+- Nonce search and balances showed no admission or debit for that attempt.
+- The example now explicitly sets application/json. The challenge regression
+  test failed before this change and passes afterward.
+- During diagnosis the initial authorization aged below the required remaining
+  seven-day validity window; /verify explicitly rejected it as too short.
+- After another empty nonce search and unchanged 0.1 balance, one fresh
+  authorization for the same 0.001-test-USDC logical purchase was created.
+- /verify returned isValid:true before the successful request. No ambiguous
+  paid call was automatically retried; exactly one purchase has been charged.
+
+Paid flow confirmed
+- GET http://127.0.0.1:3000/quote without payment -> HTTP 402.
+- Challenge includes exact / eip155:5042002, 1000 atomic USDC, configured
+  seller, GatewayWalletBatched domain and application/json resource MIME type.
+- Paid GET through the actual Rust seller -> HTTP 200 and the quote.
+- PAYMENT-RESPONSE: success:true, expected payer/network and transfer UUID.
+- Cache-Control: no-store.
+- Transfer ID: d0b24b1f-cb4f-4d4f-92e2-8b94631457c5
+- Nonce: 0x4f1455b3cdd55237f16ebf8d87e43e2f7ea43f26cf62f36a8d7285af2d794013
+- Circle created the transfer at 2026-10-16T16:08:57.953Z (21:38:57 IST).
+- Amount: 1000 atomic USDC = 0.001 test USDC.
+- Buyer available after acceptance: 0.099 test USDC.
+- Seller available while pending: 0; after completion: 0.001 test USDC.
+- The returned transaction field is a UUID, not a transaction hash.
+
+Settlement confirmed
+- Circle transfer status: completed.
+- Completion timestamp: 2026-10-16T16:23:03.275Z (21:53:03 IST).
+- API creation-to-completion interval: approximately 14 minutes 5 seconds.
+- Batch tx: 0x1c154d21215e9680e5c145ccbd16485d4068b98bf55cf7ee928eeab193847527
+- Receipt status: success; Arc Testnet block 67526714.
+- Target: GatewayWallet 0x0077777d7EBA4688BDeF3E311b846F25870A19B9.
+- Decoded submitBatch calldata: domain 26, USDC token
+  0x3600000000000000000000000000000000000000, matching GatewayWallet.
+- Matching net deltas in that batch: buyer -1000; seller +1000 atomic USDC.
+- Contract availableBalance reads at block 67526714: buyer 99000, seller 1000.
+- Final Gateway API available balances: buyer 0.099, seller 0.001 test USDC.
+- The read-only poller exited successfully; it made no payment retry.
+- The UUID-to-batch mapping is Circle's transfer record. The onchain batch
+  carries net balance changes, not individual EIP-3009 nonce records.
+
+Evidence
+- live-test-evidence/ contains sanitized public API/HTTP snapshots, transaction
+  receipt proofs, the paid result, transfer ID/nonce, source hashes and faucet
+  confirmation screenshot. It contains no private keys or signatures.
+- ../gateway-testnet-runner/ holds the local runner, locked npm dependencies,
+  exclusive attempt markers, redacted diagnostics and read-only polling history.
+- mime-regression-before.log records the missing-MIME test failure.
+- mime-regression-after.log records all 17 compatibility tests passing.
+- Formatting and Clippy all-targets with -D warnings pass after the MIME fix.
+
+Scope: this establishes one real Arc Testnet payment, using Circle's SDK buyer
+and the local Rust seller, including final onchain credit. It does not establish
+mainnet readiness, all-wallet interoperability, crash recovery, withdrawal or
+general performance. The 14-minute batching interval is this observed run only.
+
+The local seller was stopped after the paid HTTP result. No push, issue, PR,
+deployment, mainnet request, withdrawal or external outreach was performed.
+
+Official references
+https://developers.circle.com/gateway-nanopayments/quickstarts/buyer
+https://developers.circle.com/gateway-nanopayments/howtos/x402-seller-reconciliation
+https://docs.arc.io/arc/references/rpc-endpoints.md
+https://explorer.testnet.arc.io/tx/0x1c154d21215e9680e5c145ccbd16485d4068b98bf55cf7ee928eeab193847527

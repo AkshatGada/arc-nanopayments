@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-16T16:12:33.654664+00:00",
+  "files": {
+    "src/lib.rs": "01b646f726ab6eb71b40572689f6b2100863d94179c855771e9e2671b16a3c01",
+    "src/config.rs": "90ddb003504d6dc66daa7ae8006f01f1dfee05b2c0f10bfacee77f6d4f8a4fec",
+    "src/transport.rs": "9db84c52712d869ecb7ec2c3043638adbf52fc4c14009b75d8b7d088539e9417",
+    "Cargo.toml": "ca08a572ccc1f21f71ae0a81d7ba220bccfdf3d0e5a93c7b902b45dc21dadadc",
+    "Cargo.lock": "9d3d8d36ad5f53da688a6c932ae22a2e00eda250c341afaf28e0b4252cb8b724",
+    "tests/compatibility.rs": "1bbb18a60213cee2931cef7a8adcdfa4976fbd66a2c57bc40453e30a3a7cc5b7"
+  }
+}

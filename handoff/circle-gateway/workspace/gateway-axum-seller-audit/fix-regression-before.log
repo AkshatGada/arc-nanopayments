@@ -1,0 +1,42 @@
+   Compiling gateway-axum-seller v0.1.0 (/Users/akshat/circle/gateway-axum-seller)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.19s
+     Running tests/compatibility.rs (target/debug/deps/compatibility-596f79b106d025c8)
+
+running 3 tests
+test transport_does_not_follow_discovery_redirects ... FAILED
+test transport_does_not_follow_settlement_redirects ... FAILED
+test transport_rejects_non_200_success_bodies ... FAILED
+
+failures:
+
+---- transport_does_not_follow_discovery_redirects stdout ----
+
+thread 'transport_does_not_follow_discovery_redirects' (24113362) panicked at tests/compatibility.rs:640:9:
+assertion `left == right` failed: upstream 307 Temporary Redirect
+  left: 1
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- transport_does_not_follow_settlement_redirects stdout ----
+
+thread 'transport_does_not_follow_settlement_redirects' (24113363) panicked at tests/compatibility.rs:626:9:
+assertion `left == right` failed: upstream 307 Temporary Redirect
+  left: 1
+ right: 0
+
+---- transport_rejects_non_200_success_bodies stdout ----
+
+thread 'transport_rejects_non_200_success_bodies' (24113364) panicked at tests/compatibility.rs:550:9:
+assertion `left == right` failed: upstream 400 Bad Request
+  left: 200
+ right: 502
+
+
+failures:
+    transport_does_not_follow_discovery_redirects
+    transport_does_not_follow_settlement_redirects
+    transport_rejects_non_200_success_bodies
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `--test compatibility`

@@ -1,0 +1,21 @@
+[package]
+name = "circle-research-probe"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+x402-axum = { path = "../../research-x402-rs/crates/x402-axum" }
+x402-types = { path = "../../research-x402-rs/crates/x402-types" }
+axum = "0.8"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "net"] }
+tower = { version = "0.5", features = ["util"] }
+serde_json = "1"
+base64 = "0.22"
+x402-chain-eip155 = { path = "../../research-x402-rs/crates/chains/x402-chain-eip155", features = ["client", "telemetry"] }
+alloy-primitives = "1.6"
+alloy-sol-types = "1.6"
+alloy-signer = "2.0"
+async-trait = "0.1"
+
+[workspace]

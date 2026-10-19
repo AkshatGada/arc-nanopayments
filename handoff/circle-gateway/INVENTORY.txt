@@ -1,0 +1,8 @@
+Captured 2026-10-19T01:57:57.827352+00:00
+Original workspace: /Users/akshat/circle
+Preserved 16760 source/evidence/research files plus Git metadata for 8 research clones.
+Excluded only: gateway-axum-seller/scripts/__pycache__, gateway-axum-seller/target, gateway-testnet-runner/.secrets, gateway-testnet-runner/node_modules, research-evidence/rust-probe/target
+The vendor source directory research-solana-gateway/vendor/cc/src/target is retained.
+Research repositories were clean with no stashes/ignored files; their complete shallow Git metadata is archived, permitting offline checkout without upstream access.
+Wallet keys and real signed payloads remain on the original Mac and are not part of this public handoff.
+Global tools, Cargo/npm caches and Codex conversation history are not uploaded. The next-agent document preserves the working context.

@@ -1,0 +1,74 @@
+{
+  "chainId": 5042002,
+  "transfer": {
+    "id": "d0b24b1f-cb4f-4d4f-92e2-8b94631457c5",
+    "status": "completed",
+    "token": "USDC",
+    "sendingNetwork": "eip155:5042002",
+    "recipientNetwork": "eip155:5042002",
+    "fromAddress": "0x8f80a33830124802d49b49d42806c05c110dcbb8",
+    "toAddress": "0x2ef8a0d57128dedadd287b8ac64a986d6f26f9bf",
+    "amount": "1000",
+    "nonce": "0x4f1455b3cdd55237f16ebf8d87e43e2f7ea43f26cf62f36a8d7285af2d794013",
+    "txHash": "0x1c154d21215e9680e5c145ccbd16485d4068b98bf55cf7ee928eeab193847527",
+    "createdAt": "2026-10-16T16:08:57.953Z",
+    "updatedAt": "2026-10-16T16:23:03.275Z"
+  },
+  "batch": {
+    "txHash": "0x1c154d21215e9680e5c145ccbd16485d4068b98bf55cf7ee928eeab193847527",
+    "status": "success",
+    "blockNumber": "67526714",
+    "transactionTo": "0x0077777d7eba4688bdef3e311b846f25870a19b9",
+    "batchId": "0x1f7b9e48318cf27357ad6ee1008cf1fbb02f21a16c85599f4e1ae90bb55ef470",
+    "domain": 26,
+    "token": "0x3600000000000000000000000000000000000000",
+    "wallet": "0x0077777d7EBA4688BDeF3E311b846F25870A19B9",
+    "ourDeltas": [
+      {
+        "depositor": "0x2EF8A0d57128DEdaDD287b8AC64A986d6f26f9Bf",
+        "value": "1000"
+      },
+      {
+        "depositor": "0x8F80A33830124802d49B49D42806c05C110dCBb8",
+        "value": "-1000"
+      }
+    ]
+  },
+  "buyer": {
+    "wallet": {
+      "balance": "19897140",
+      "formatted": "19.89714"
+    },
+    "gateway": {
+      "total": "99000",
+      "available": "99000",
+      "withdrawing": "0",
+      "withdrawable": "0",
+      "formattedTotal": "0.099",
+      "formattedAvailable": "0.099",
+      "formattedWithdrawing": "0",
+      "formattedWithdrawable": "0"
+    }
+  },
+  "seller": {
+    "wallet": {
+      "balance": "0",
+      "formatted": "0"
+    },
+    "gateway": {
+      "total": "1000",
+      "available": "1000",
+      "withdrawing": "0",
+      "withdrawable": "0",
+      "formattedTotal": "0.001",
+      "formattedAvailable": "0.001",
+      "formattedWithdrawing": "0",
+      "formattedWithdrawable": "0"
+    }
+  },
+  "contractBalancesAtBatchBlock": {
+    "blockNumber": "67526714",
+    "buyerAtomic": "99000",
+    "sellerAtomic": "1000"
+  }
+}

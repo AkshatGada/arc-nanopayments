@@ -1,0 +1,9 @@
+{
+  "url": "http://127.0.0.1:3000/quote",
+  "method": "GET",
+  "chainId": 5042002,
+  "capAtomic": "1000",
+  "buyer": "0x8F80A33830124802d49B49D42806c05C110dCBb8",
+  "seller": "0x2EF8A0d57128DEdaDD287b8AC64A986d6f26f9Bf",
+  "at": "2026-10-16T16:04:29.991Z"
+}

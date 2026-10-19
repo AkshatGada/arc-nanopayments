@@ -1,0 +1,72 @@
+{
+  "recorded_at_utc": "2026-10-16T12:32:59.443385+00:00",
+  "repositories": [
+    {
+      "path": "/Users/akshat/circle/research-skills",
+      "url": "https://github.com/circlefin/skills.git",
+      "sha": "04cbd18fdf7e2e459452f2a94594fb5c526d9908",
+      "commit_time": "2026-10-09T10:02:29-07:00",
+      "status": ""
+    },
+    {
+      "path": "/Users/akshat/circle/research-arc-nanopayments",
+      "url": "https://github.com/circlefin/arc-nanopayments.git",
+      "sha": "a29f920ed8eef89bec36d5138892c72b13759710",
+      "commit_time": "2026-04-04T15:32:21+01:00",
+      "status": ""
+    },
+    {
+      "path": "/Users/akshat/circle/research-evm-gateway",
+      "url": "https://github.com/circlefin/evm-gateway-contracts.git",
+      "sha": "c21d2d2e356d6566b6c7c3dde7ebcbdf1747590b",
+      "commit_time": "2026-09-29T14:48:37-04:00",
+      "status": ""
+    },
+    {
+      "path": "/Users/akshat/circle/research-solana-gateway",
+      "url": "https://github.com/circlefin/solana-gateway-contracts.git",
+      "sha": "909373cdee3aad9e06fe37b599f9d29160f7ca4c",
+      "commit_time": "2026-06-18T15:11:02-06:00",
+      "status": ""
+    },
+    {
+      "path": "/Users/akshat/circle/research-starter-kits",
+      "url": "https://github.com/circlefin/agent-stack-starter-kits.git",
+      "sha": "39963306050b1581e1e00ae82de2a6fa57bbb428",
+      "commit_time": "2026-08-28T10:59:26-07:00",
+      "status": ""
+    },
+    {
+      "path": "/Users/akshat/circle/research-x402-rs",
+      "url": "https://github.com/x402-rs/x402-rs.git",
+      "sha": "e75adda8a0e3cf23db446883ba91b88bbab2fe28",
+      "commit_time": "2026-07-13T13:49:19+03:00",
+      "status": ""
+    },
+    {
+      "path": "/Users/akshat/circle/research-x402",
+      "url": "https://github.com/coinbase/x402.git",
+      "sha": "0e6e8c55d86b4f14234fb6e49a4052074fb93e57",
+      "commit_time": "2026-10-15T10:26:05-07:00",
+      "status": ""
+    },
+    {
+      "path": "/Users/akshat/circle/research-x402-foundation",
+      "url": "https://github.com/x402-foundation/x402.git",
+      "sha": "faa1c694c66a3732aaabbce93bdae140e521a67d",
+      "commit_time": "2026-10-15T09:58:51-07:00",
+      "status": ""
+    }
+  ],
+  "package": {
+    "name": "@circle-fin/x402-batching",
+    "version": "3.5.0",
+    "sha256_tarball": "d412017351915720d4345c95ae5c5ba742c3fcc5e779e7094663a54976315b69"
+  },
+  "limitations": [
+    "Gateway supported mainnet/testnet GET both HTTP 403",
+    "GitHub unauthenticated API limit reached; filtered HTML searches completed separately",
+    "Original Rust workspace tests blocked by uncached Aptos merlin git patch",
+    "No live verification or settlement; probes use fake signer or loopback mock"
+  ]
+}

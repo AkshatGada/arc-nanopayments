@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-19T01:55:33.992869+00:00",
+  "results": [
+    {
+      "check": "seller-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--all-targets"
+      ],
+      "cwd": "gateway-axum-seller",
+      "exit_code": 0,
+      "execution_note": "Loopback socket permission granted; synthetic fixtures only, no hosted calls."
+    },
+    {
+      "check": "seller-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "cwd": "gateway-axum-seller",
+      "exit_code": 0
+    },
+    {
+      "check": "seller-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "gateway-axum-seller",
+      "exit_code": 0
+    },
+    {
+      "check": "audit-regressions",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--test",
+        "repro",
+        "audit_",
+        "--",
+        "--nocapture"
+      ],
+      "cwd": "gateway-axum-seller-audit",
+      "exit_code": 0,
+      "execution_note": "Loopback socket permission granted; synthetic fixtures only, no hosted calls."
+    }
+  ]
+}

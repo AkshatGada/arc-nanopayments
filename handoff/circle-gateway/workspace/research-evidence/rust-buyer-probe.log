@@ -1,0 +1,6 @@
+   Compiling circle-research-probe v0.0.0 (/Users/akshat/circle/research-evidence/rust-probe)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.47s
+     Running `target/debug/buyer`
+CONFIRMED Rust standard exact client accepts GatewayWalletBatched as a candidate
+CONFIRMED requested digest uses USDC token as verifyingContract, not GatewayWallet
+CONFIRMED accepted metadata is preserved, so correcting signing/routing is the actual gap

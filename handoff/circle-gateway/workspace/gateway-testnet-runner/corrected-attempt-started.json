@@ -1,0 +1,8 @@
+{
+  "buyer": "0x8F80A33830124802d49B49D42806c05C110dCBb8",
+  "seller": "0x2EF8A0d57128DEdaDD287b8AC64A986d6f26f9Bf",
+  "amountAtomic": "1000",
+  "priorNonce": "0x532196cbd1d1ac288aeff12e6e67f6203f8921bfefdf26dc6cc38a7b7f71df0d",
+  "priorResult": "rejected before admission; balance unchanged",
+  "at": "2026-10-16T16:08:57.445Z"
+}

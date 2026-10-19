@@ -1,0 +1,16 @@
+{
+  "wallet": {
+    "balance": "19897140",
+    "formatted": "19.89714"
+  },
+  "gateway": {
+    "total": "100000",
+    "available": "100000",
+    "withdrawing": "0",
+    "withdrawable": "0",
+    "formattedTotal": "0.1",
+    "formattedAvailable": "0.1",
+    "formattedWithdrawing": "0",
+    "formattedWithdrawable": "0"
+  }
+}

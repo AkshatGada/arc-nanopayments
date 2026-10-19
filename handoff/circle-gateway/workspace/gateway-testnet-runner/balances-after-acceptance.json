@@ -1,0 +1,35 @@
+{
+  "buyer": {
+    "wallet": {
+      "balance": "19897140",
+      "formatted": "19.89714"
+    },
+    "gateway": {
+      "total": "99000",
+      "available": "99000",
+      "withdrawing": "0",
+      "withdrawable": "0",
+      "formattedTotal": "0.099",
+      "formattedAvailable": "0.099",
+      "formattedWithdrawing": "0",
+      "formattedWithdrawable": "0"
+    }
+  },
+  "seller": {
+    "wallet": {
+      "balance": "0",
+      "formatted": "0"
+    },
+    "gateway": {
+      "total": "0",
+      "available": "0",
+      "withdrawing": "0",
+      "withdrawable": "0",
+      "formattedTotal": "0",
+      "formattedAvailable": "0",
+      "formattedWithdrawing": "0",
+      "formattedWithdrawable": "0"
+    }
+  },
+  "at": "2026-10-16T16:10:41.067Z"
+}

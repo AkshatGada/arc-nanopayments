@@ -1,0 +1,43 @@
+{
+  "nonce": "0x532196cbd1d1ac288aeff12e6e67f6203f8921bfefdf26dc6cc38a7b7f71df0d",
+  "search": {
+    "transfers": [],
+    "pagination": {
+      "self": "https://gateway-api-testnet.circle.com/v1/x402/transfers?network=eip155%3A5042002&nonce=0x532196cbd1d1ac288aeff12e6e67f6203f8921bfefdf26dc6cc38a7b7f71df0d",
+      "first": "https://gateway-api-testnet.circle.com/v1/x402/transfers?network=eip155%3A5042002&nonce=0x532196cbd1d1ac288aeff12e6e67f6203f8921bfefdf26dc6cc38a7b7f71df0d"
+    }
+  },
+  "buyer": {
+    "wallet": {
+      "balance": "19897140",
+      "formatted": "19.89714"
+    },
+    "gateway": {
+      "total": "100000",
+      "available": "100000",
+      "withdrawing": "0",
+      "withdrawable": "0",
+      "formattedTotal": "0.1",
+      "formattedAvailable": "0.1",
+      "formattedWithdrawing": "0",
+      "formattedWithdrawable": "0"
+    }
+  },
+  "seller": {
+    "wallet": {
+      "balance": "0",
+      "formatted": "0"
+    },
+    "gateway": {
+      "total": "0",
+      "available": "0",
+      "withdrawing": "0",
+      "withdrawable": "0",
+      "formattedTotal": "0",
+      "formattedAvailable": "0",
+      "formattedWithdrawing": "0",
+      "formattedWithdrawable": "0"
+    }
+  },
+  "at": "2026-10-16T16:05:15.561Z"
+}

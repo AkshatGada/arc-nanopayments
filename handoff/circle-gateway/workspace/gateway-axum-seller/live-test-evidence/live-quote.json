@@ -1,0 +1,46 @@
+{
+  "status": 402,
+  "headers": {
+    "payment-required": "eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50LVNpZ25hdHVyZSBoZWFkZXIgaXMgcmVxdWlyZWQiLCJyZXNvdXJjZSI6eyJ1cmwiOiJodHRwOi8vMTI3LjAuMC4xOjMwMDAvcXVvdGUiLCJkZXNjcmlwdGlvbiI6Ik9uZSByZWFkLW9ubHkgcXVvdGU7IEdhdGV3YXkgYWNjZXB0YW5jZSBwcmVjZWRlcyBkZWxpdmVyeSJ9LCJhY2NlcHRzIjpbeyJzY2hlbWUiOiJleGFjdCIsIm5ldHdvcmsiOiJlaXAxNTU6NTA0MjAwMiIsImFtb3VudCI6IjEwMDAiLCJwYXlUbyI6IjB4MkVGOEEwZDU3MTI4REVkYUREMjg3YjhBQzY0QTk4NmQ2ZjI2ZjlCZiIsIm1heFRpbWVvdXRTZWNvbmRzIjo2MDQ5MDAsImFzc2V0IjoiMHgzNjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIiwiZXh0cmEiOnsiYXNzZXRzIjpbeyJhZGRyZXNzIjoiMHgzNjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIiwiYXV0aG9yaXphdGlvblZlcnNpb25zIjpbIjEiLCIyIl0sImRlY2ltYWxzIjo2LCJzeW1ib2wiOiJVU0RDIn1dLCJtaW5WYWxpZGl0eVNlY29uZHMiOjYwNDgwMCwibmFtZSI6IkdhdGV3YXlXYWxsZXRCYXRjaGVkIiwidmVyaWZ5aW5nQ29udHJhY3QiOiIweDAwNzc3NzdkN0VCQTQ2ODhCRGVGM0UzMTFiODQ2RjI1ODcwQTE5QjkiLCJ2ZXJzaW9uIjoiMSJ9fV19",
+    "cache-control": "no-store",
+    "connection": "close",
+    "content-length": "0",
+    "date": "Fri, 16 Oct 2026 16:01:28 GMT"
+  },
+  "body": "",
+  "paymentRequired": {
+    "x402Version": 2,
+    "error": "Payment-Signature header is required",
+    "resource": {
+      "url": "http://127.0.0.1:3000/quote",
+      "description": "One read-only quote; Gateway acceptance precedes delivery"
+    },
+    "accepts": [
+      {
+        "scheme": "exact",
+        "network": "eip155:5042002",
+        "amount": "1000",
+        "payTo": "0x2EF8A0d57128DEdaDD287b8AC64A986d6f26f9Bf",
+        "maxTimeoutSeconds": 604900,
+        "asset": "0x3600000000000000000000000000000000000000",
+        "extra": {
+          "assets": [
+            {
+              "address": "0x3600000000000000000000000000000000000000",
+              "authorizationVersions": [
+                "1",
+                "2"
+              ],
+              "decimals": 6,
+              "symbol": "USDC"
+            }
+          ],
+          "minValiditySeconds": 604800,
+          "name": "GatewayWalletBatched",
+          "verifyingContract": "0x0077777d7EBA4688BDeF3E311b846F25870A19B9",
+          "version": "1"
+        }
+      }
+    ]
+  }
+}

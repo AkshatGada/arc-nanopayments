@@ -1,0 +1,24 @@
+   Compiling gateway-axum-seller v0.1.0 (/Users/akshat/circle/gateway-axum-seller)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.18s
+     Running tests/compatibility.rs (target/debug/deps/compatibility-4c25f2c8752582aa)
+
+running 1 test
+test challenge_preserves_gateway_domain_integer_price_and_resource ... FAILED
+
+failures:
+
+---- challenge_preserves_gateway_domain_integer_price_and_resource stdout ----
+
+thread 'challenge_preserves_gateway_domain_integer_price_and_resource' (24173938) panicked at tests/compatibility.rs:177:5:
+assertion `left == right` failed
+  left: Null
+ right: "application/json"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    challenge_preserves_gateway_domain_integer_price_and_resource
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 16 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--test compatibility`

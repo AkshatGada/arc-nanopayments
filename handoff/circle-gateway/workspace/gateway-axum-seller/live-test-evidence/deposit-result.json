@@ -1,0 +1,7 @@
+{
+  "approvalTxHash": "0xe9a734aa3dd7d0a4e0d52875e3ba70467a4ca87f1b13c56829de9b40abded23e",
+  "depositTxHash": "0x8497c70cf6d27d589ca33fdef59f5e2dd3018d53db227444495544accab46c10",
+  "amount": "100000",
+  "formattedAmount": "0.1",
+  "depositor": "0x8F80A33830124802d49B49D42806c05C110dCBb8"
+}

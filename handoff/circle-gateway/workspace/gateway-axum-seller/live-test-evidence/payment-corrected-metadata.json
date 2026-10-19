@@ -1,0 +1,12 @@
+{
+  "buyer": "0x8F80A33830124802d49B49D42806c05C110dCBb8",
+  "seller": "0x2EF8A0d57128DEdaDD287b8AC64A986d6f26f9Bf",
+  "nonce": "0x4f1455b3cdd55237f16ebf8d87e43e2f7ea43f26cf62f36a8d7285af2d794013",
+  "amountAtomic": "1000",
+  "resource": {
+    "url": "http://127.0.0.1:3000/quote",
+    "description": "One read-only quote; Gateway acceptance precedes delivery",
+    "mimeType": "application/json"
+  },
+  "at": "2026-10-16T16:08:57.451Z"
+}

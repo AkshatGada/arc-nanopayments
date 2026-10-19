@@ -1,0 +1,253 @@
+CIRCLE GATEWAY RUST SELLER — CONTINUATION ON A NEW MAC
+Prepared 19 October 2026. Original work and live test: 16 October 2026.
+
+USER REQUEST AND AUTHORIZATION
+The user, Akshat Gada, is moving this work because the original Mac is short
+on storage. Preserve and reproduce the completed work, then continue from
+this state. The user explicitly authorized forking circlefin/arc-nanopayments
+and pushing everything needed for handoff on a separate branch. Wallet keys
+must stay out of GitHub. DO NOT open a PR, send outreach, deploy, use mainnet,
+delete original resources, or make further payments under this handoff.
+An earlier no-push restriction was superseded specifically for this fork
+handoff. It does not authorize arbitrary publication or an upstream PR.
+
+REPOSITORY AND LAYOUT
+Fork: https://github.com/AkshatGada/arc-nanopayments
+Branch: codex/circle-gateway-handoff
+Base: circlefin/arc-nanopayments a29f920ed8eef89bec36d5138892c72b13759710
+All additions are under handoff/circle-gateway/. The original Next.js demo
+is unchanged. This is a migration branch, NOT a proposed upstream diff.
+The Rust seller is a standalone Cargo workspace, not integrated into Next.js.
+Read SHA256SUMS, HANDOFF_MANIFEST.json, INVENTORY.txt and REPOSITORIES.json.
+
+FIRST ACTIONS ON THE NEW MAC
+1. Clone this exact branch (use HTTPS or your existing GitHub authentication):
+   git clone --single-branch --branch codex/circle-gateway-handoff \
+     https://github.com/AkshatGada/arc-nanopayments.git circle-gateway-handoff
+   cd circle-gateway-handoff
+   shasum -a 256 -c handoff/circle-gateway/SHA256SUMS
+   python3 handoff/circle-gateway/restore_workspace.py --verify-only
+
+2. With Python >=3.12 and Git available, restore to a NEW directory:
+   python3 handoff/circle-gateway/restore_workspace.py "$HOME/circle-workspace"
+   This copies all implementation/research/audit/evidence files and restores
+   all eight original research repositories from archived Git metadata.
+   It checks file hashes, executable modes, exact repository HEADs and clean
+   Git status. No network, wallet access or payment is used by restoration.
+   Do not overwrite an existing workspace. Adjust the destination as needed.
+
+3. Read these restored files in order:
+   gateway-axum-seller/README.md
+   gateway-axum-seller/VALIDATION.txt
+   gateway-axum-seller/LIVE_TESTNET.txt
+   gateway-axum-seller-audit/FIX_REAUDIT.txt
+   gateway-axum-seller-audit/independent-reaudit.txt
+   gateway-testnet-runner/README.md
+   RESEARCH_REPORT.txt
+   Research and audit documents preserve their original dates and stage
+   boundaries. For example, the initial research report's 403/no-live-test
+   statements are historical; LIVE_TESTNET.txt records the subsequent success.
+
+4. Toolchain and safe reproduction:
+   Original tools: Rust/cargo 1.94.1 (Homebrew), Node 25.5.0, Python 3.14.7.
+   Rust 1.93 is declared minimum but was not independently tested. Use 1.94.1
+   to match the validated toolchain. A compiler/linker must be available.
+   cd "$HOME/circle-workspace/gateway-axum-seller"
+   cargo fetch --locked
+   cargo test --offline --locked --all-targets
+   cargo fmt --all --check
+   cargo clippy --offline --locked --all-targets -- -D warnings
+   cargo build --offline --locked --bins --examples
+   Tests use ephemeral loopback HTTP servers and synthetic signatures only.
+   If a sandbox denies socket binding with Operation not permitted, use the
+   permitted local-loopback execution path; that error is environmental.
+   The handoff verification/ directory records fresh checks on 19 October.
+
+   cd "$HOME/circle-workspace/gateway-axum-seller-audit"
+   cargo fetch --locked
+   cargo test --offline --locked --test repro audit_ -- --nocapture
+   This is the original two audit probes converted into regression assertions.
+   The separate audit harness imports ../gateway-axum-seller by relative path.
+
+   Follow the seller README's three-terminal mock demonstration if desired.
+   Run mock_gateway, start the seller with the provided fake receive address
+   and GATEWAY_FACILITATOR_URL=http://127.0.0.1:4020/v1/x402/, then execute
+   python3 scripts/offline_smoke.py. Stop both servers after the smoke check.
+   The script refuses non-mock health mode. It must never be aimed at Circle.
+
+   Dependencies/build outputs are deliberately not transferred. Cargo needs
+   network access once to fetch the pinned Git revision and crates. npm ci
+   in gateway-testnet-runner installs pinned public dependencies if needed;
+   do not run its wallet setup, deposit or paid-request scripts.
+
+WHAT WAS BUILT
+The user selected recommendation #1: a native Rust/Axum Circle Gateway seller
+using existing x402-rs middleware, with compatibility fixtures and tests.
+No new SDK, buyer implementation or upstream crate modifications were made.
+x402-axum and x402-types are pinned to upstream Git revision
+e75adda8a0e3cf23db446883ba91b88bbab2fe28.
+
+src/config.rs:
+- Required nonzero EVM seller receive address; integer pricing 1..1,000,000
+  atomic USDC, default 1000 (0.001 USDC).
+- Arc Testnet eip155:5042002 default; Base Sepolia eip155:84532 also allowed.
+- Pinned known USDC assets and testnet GatewayWallet:
+  0x0077777d7EBA4688BDeF3E311b846F25870A19B9.
+- Facilitator is Circle testnet HTTPS or numeric-loopback HTTP for mocks.
+  No mainnet fallback; bounded timeout; validated public origin.
+
+src/transport.rs:
+- Private Gateway-specific reqwest client; redirects and automatic retries
+  disabled. Only HTTP 200 is accepted before JSON parsing for all operations.
+- Startup /supported is mandatory; supported capabilities are pinned for the
+  lifetime of the process. Error bodies and redirect locations are redacted.
+
+src/lib.rs:
+- Existing x402-axum paygate, raw V2 PriceTag preserving full Gateway extra,
+  settle_before_execution, correct GatewayWalletBatched signing metadata.
+- Explicit resource.mimeType application/json, required by Circle's live API.
+- GET /quote returns content after accepted payment; no separate /verify
+  round trip in the seller's paid flow. Receipt must have matching network,
+  valid matching payer and transfer UUID. The body says accepted/transferId.
+- HEAD/POST/OPTIONS rejected before payment handling (including signed HEAD).
+- All responses no-store. Bare settlement-error 402 becomes redacted 502 with
+  automaticRetry:false and no fresh payment challenge.
+- /health distinguishes loopback_mock from circle_testnet.
+
+There is no durable purchase ledger, response recovery, reconciliation worker
+or exactly-once guarantee. Timeout is an unknown outcome, not proof of failure.
+A fresh authorization can charge a logical purchase again. EOA buyer support
+only; no Nanopayments ERC1271 or Solana support is established.
+
+INDEPENDENT AUDIT AND FIXES
+The user requested a second agent audit, fixes for both bugs, regression tests,
+and another audit by the same reviewer. Those steps were completed locally.
+Original findings, both P2:
+1. Generic HTTP transport followed a cross-origin 307 and forwarded the full
+   payment payload beyond the initially allowlisted origin.
+2. Generic facilitator parsing accepted success-shaped HTTP 400/412 bodies,
+   allowing content fulfillment from an unsuccessful HTTP response.
+Both were fixed in the local strict transport. Three added regression tests
+failed against the old implementation and passed after the fixes. Tests cover
+301/302/303/307/308 redirects for discovery/settlement with zero destination
+requests, and success-shaped 400/412/201/202/other non-200 bodies with zero
+fulfillment. The original audit probes now assert fixed behavior and pass.
+The same agent re-audited and found no further concrete regression. It ran
+the actual package checks and an independent harness. AUDIT.txt and
+reproductions.log are pre-fix history; FIX_REAUDIT.txt is the later result.
+That independent re-audit preceded the subsequent one-line MIME fix. Do not
+claim the reviewer independently audited that later change. Its regression
+and the successful real testnet flow provide separate validation.
+
+LIVE CIRCLE TESTNET RUN — ALREADY COMPLETED; DO NOT REPLAY
+User approved fresh test-only wallets funded solely from the testnet faucet.
+The Node runner is separate from the Rust seller and uses exact versions:
+@circle-fin/x402-batching 3.5.0, @x402/core 2.3.0, @x402/evm 2.3.0,
+viem 2.52.0 (package-lock.json preserved).
+Arc RPC was explicitly https://rpc.testnet.arc.io, chain ID 5042002, domain 26.
+SDK 3.5.0's default .network RPC hostname failed DNS during the original run.
+
+Buyer: 0x8F80A33830124802d49B49D42806c05C110dCBb8
+Seller: 0x2EF8A0d57128DEdaDD287b8AC64A986d6f26f9Bf
+Faucet: 20 test USDC; approval and deposit each capped at 0.1 test USDC.
+Deposit tx:
+0x8497c70cf6d27d589ca33fdef59f5e2dd3018d53db227444495544accab46c10
+Logical purchase: 1000 atomic = 0.001 test USDC; exactly one charged purchase.
+
+The first request was explicitly rejected for missing resource.mimeType.
+Nonce search and unchanged balance established it was not admitted. A failing
+MIME regression was added, then application/json set explicitly. During this
+diagnosis the first authorization aged below the remaining seven-day validity
+minimum; /verify explicitly rejected it. After read-only reconciliation, one
+fresh authorization was made. /verify returned isValid:true, and the actual
+Rust seller returned a paid HTTP 200 with quote, no-store and transfer UUID.
+No ambiguous paid attempt was blindly retried.
+
+Transfer UUID: d0b24b1f-cb4f-4d4f-92e2-8b94631457c5
+Accepted nonce:
+0x4f1455b3cdd55237f16ebf8d87e43e2f7ea43f26cf62f36a8d7285af2d794013
+Created: 2026-10-16T16:08:57.953Z
+Completed: 2026-10-16T16:23:03.275Z (~14 minutes 5 seconds for this run only).
+Batch tx:
+0x1c154d21215e9680e5c145ccbd16485d4068b98bf55cf7ee928eeab193847527
+Successful Arc Testnet receipt at block 67526714; target GatewayWallet.
+Decoded submitBatch: domain 26, USDC 0x3600000000000000000000000000000000000000,
+buyer delta -1000, seller +1000. Contract balances at that block were buyer
+99000 and seller 1000 atomic; final observed Gateway balances 0.099/0.001.
+The UUID-to-batch mapping is Circle's transfer record; batches carry net
+deltas, not per-authorization nonce records.
+Explorer:
+https://explorer.testnet.arc.io/tx/0x1c154d21215e9680e5c145ccbd16485d4068b98bf55cf7ee928eeab193847527
+
+Evidence: gateway-axum-seller/live-test-evidence/summary.json,
+onchain-settlement-proof.json, paid-result-final.json, transfer-latest.json,
+source-sha256.json, evidence-sha256.json, MIME regression logs and screenshots.
+These are historical observations, not a fresh current-balance query.
+The seller and poller were stopped after the completed run.
+One testnet success does not establish mainnet readiness, withdrawals,
+crash recovery, broad wallet compatibility or performance guarantees.
+
+PRIVATE MATERIAL AND ATTEMPT GUARDS
+Original private files remain only on the original Mac in:
+/Users/akshat/circle/gateway-testnet-runner/.secrets/
+wallets.json, authorization.json, final-payment-payload.json.
+Directory mode 0700, files 0600. No keys or real signed payloads are uploaded.
+They are not required to build, test or inspect public settlement evidence.
+If the user later needs the same wallets, arrange private transfer separately;
+never generate replacement keys pretending to recover these addresses.
+Some runner read-only scripts import common.mjs, which loads wallet keys;
+they will need that private material or a deliberately reviewed read-only
+refactor. Do not circumvent this by running setup-wallets.mjs.
+The preserved deposit/paid-attempt marker files intentionally block replays.
+DO NOT delete them to rerun payments. Do not submit any saved authorization.
+
+RESEARCH CONTEXT AND POSSIBLE FOLLOW-UP
+Original aim: a bounded, technically meaningful Circle contribution before
+any engineering/career conversation. No outreach has been sent. This is
+personal open-source work, not an AXP/ContextHint pitch.
+RESEARCH_REPORT.txt and research-evidence/ preserve public sources, exact
+revisions, npm source maps, API metadata, offline Rust probes and limitations.
+All eight clean research repositories are reconstructible offline from this
+handoff. Their shallow history is preserved as it was, not expanded.
+
+Key findings:
+- Gateway Nanopayments use independent EIP3009 authorizations, prefunded
+  GatewayWallet and hosted admission/TEE ledger, then asynchronous net-delta
+  batches. A successful settle transaction field is a UUID, not finality.
+- Generic Rust exact buyer selects a Gateway offer but signs against the
+  USDC asset, not GatewayWallet. The offline fake-digest recorder reproduces
+  this. Do not change a generic onchain facilitator to trust an arbitrary
+  seller-supplied verifyingContract or call Gateway transferWithAuthorization.
+  Foundation PRs 2885/3174/3175/3176 already rejected that incorrect premise.
+- x402-rs batch-settlement PR90/issue92 address channel/voucher schemes,
+  not Circle Gateway. Existing retry/recovery work includes 108/134/135/138/140.
+- Arc sample issue43/PR44/PR47 and skills issue50/PR55 overlap idempotency and
+  retry work. Recheck current state before proposing another implementation.
+- A client-only x402-chain-eip155 feature build failed on unguarded tracing;
+  client+telemetry succeeded. Reproduction is in research-evidence/feature-probe.
+  This is a separate unimplemented candidate, not part of the seller fix.
+- Public npm SDK3.5 source maps contain actual TypeScript; package gitHead
+  51974f8e817540202aa0758024e336d582cf076b. Do not call it uninspectable.
+- User reports AXP has both Solana and Tempo channels; no AXP source was
+  inspected here. Do not infer its custody/recovery/finality properties.
+- Public maintainer routes and contact evidence are in the report; those
+  observations and open-PR overlap date from 16 October, so refresh before
+  contribution or outreach decisions. Do not contact anyone automatically.
+
+CONTINUE FROM HERE
+First reproduce and report the restored tests, confirm the existing paid run
+is completed from its saved evidence, and inspect the current seller against
+the documented limitations. No additional feature was selected after the live
+test: the immediate next deliverable is a reproducible handoff and reviewable
+seller. Continue useful local review/docs/refinement within that scope.
+Before an eventual PR, confirm the appropriate maintainer-approved home
+(Rust examples or a Circle example/reference), refresh upstream overlap, and
+prepare a clean implementation-only branch. Do not open a PR until asked.
+Keep raw research, internal audit narratives and migration housekeeping out
+of a future contribution description. Public descriptions should cover the
+concrete behavior, scoped implementation and reproducible validation.
+
+Nothing on the original Mac may be deleted on the basis of this handoff alone.
+Confirm successful restoration on the destination Mac before any separately
+authorized cleanup. Shared tools, credentials and unrelated projects are
+outside this task.

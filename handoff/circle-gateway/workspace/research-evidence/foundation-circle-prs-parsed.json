@@ -1,0 +1,155 @@
+{
+  "query": null,
+  "results": [
+    {
+      "number": 3781,
+      "title": "docs(specs): add upto scheme for Stellar",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3781"
+    },
+    {
+      "number": 3618,
+      "title": "fix(python): add Monad testnet Circle faucet to paywall",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3618"
+    },
+    {
+      "number": 3617,
+      "title": "fix(go): add Monad testnet faucet to embedded paywall",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3617"
+    },
+    {
+      "number": 3590,
+      "title": "feat(evm): add Arc default stablecoins",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3590"
+    },
+    {
+      "number": 3570,
+      "title": "feat(evm): add Monad testnet USDC default asset",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3570"
+    },
+    {
+      "number": 3375,
+      "title": "feat(paywall): add Stellar subpath (@x402/paywall/stellar)",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3375"
+    },
+    {
+      "number": 3325,
+      "title": "spec: settlement status vocabulary for SettleResponse",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3325"
+    },
+    {
+      "number": 3227,
+      "title": "feat(evm): add Sei default stablecoins",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3227"
+    },
+    {
+      "number": 3203,
+      "title": "feat(ts): auth capture sdk v1.1",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3203"
+    },
+    {
+      "number": 3199,
+      "title": "feat(evm): add Upto-only deployment entrypoint",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3199"
+    },
+    {
+      "number": 3176,
+      "title": "fix(evm): sign/verify/settle EIP-3009 payments against extra.verifyingContract (Go)",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3176"
+    },
+    {
+      "number": 3175,
+      "title": "fix(evm): sign/verify/settle EIP-3009 payments against extra.verifyingContract (TS)",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3175"
+    },
+    {
+      "number": 3174,
+      "title": "fix(evm): verify and settle EIP-3009 payments against extra.verifyingContract",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3174"
+    },
+    {
+      "number": 3049,
+      "title": "specs/bazaar: metadata handling must not block payment",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3049"
+    },
+    {
+      "number": 3025,
+      "title": "feat(evm): add Celo mainnet (42220) and Celo Sepolia (11142220) default stablecoin",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/3025"
+    },
+    {
+      "number": 2979,
+      "title": "spec(extensions): add discovery \u2014 DNS + .well-known facilitator records",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2979"
+    },
+    {
+      "number": 2948,
+      "title": "spec(near): add the `intents-verifier` transfer method to exact/NEAR",
+      "state": "REPO_PULL_REQUEST_STATE_OPEN",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2948"
+    },
+    {
+      "number": 2944,
+      "title": "feat: add Solana support to cloudfront-lambda-edge example",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2944"
+    },
+    {
+      "number": 2885,
+      "title": "fix(evm): sign EIP-3009 domain against extra.verifyingContract, not asset",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2885"
+    },
+    {
+      "number": 2849,
+      "title": "specs(exact): propose Starknet exact scheme for x402 v2 (spec-only)",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2849"
+    },
+    {
+      "number": 2813,
+      "title": "docs(near): document network support",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2813"
+    },
+    {
+      "number": 2597,
+      "title": "Add XDC Network mainnet (50) and Apothem testnet (51) USDC default stablecoins",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2597"
+    },
+    {
+      "number": 2596,
+      "title": "Add XDC Network mainnet (50) and Apothem testnet (51) USDC default stablecoins",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2596"
+    },
+    {
+      "number": 2485,
+      "title": "feat(go): add sign-in-with-x server and client support",
+      "state": "REPO_PULL_REQUEST_STATE_MERGED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2485"
+    },
+    {
+      "number": 2355,
+      "title": "Add XyncPay to ecosystem (Infrastructure & Tooling)",
+      "state": "REPO_PULL_REQUEST_STATE_CLOSED",
+      "permalink": "https://github.com/x402-foundation/x402/pull/2355"
+    }
+  ]
+}

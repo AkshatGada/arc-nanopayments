@@ -1,0 +1,20 @@
+{
+  "chainId": 5042002,
+  "buyer": "0x8F80A33830124802d49B49D42806c05C110dCBb8",
+  "balances": {
+    "wallet": {
+      "balance": "20000000",
+      "formatted": "20"
+    },
+    "gateway": {
+      "total": "0",
+      "available": "0",
+      "withdrawing": "0",
+      "withdrawable": "0",
+      "formattedTotal": "0",
+      "formattedAvailable": "0",
+      "formattedWithdrawing": "0",
+      "formattedWithdrawable": "0"
+    }
+  }
+}
