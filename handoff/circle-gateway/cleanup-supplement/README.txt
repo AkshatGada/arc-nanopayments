@@ -1,0 +1,3 @@
+Added 19 October 2026 before user-authorized local cleanup.
+These small scratch artifacts were outside the original workspace. The audit scratch source is historical/independent and must not replace the current seller. Its re-audit result is also recorded in the main workspace audit folder. Packaging scripts preserve how the original handoff was assembled; do not run them on a restored workspace without review. The npm install log contains no wallet material.
+The original handoff commit e05d7f002cd8f3ae6cad6e5051bc3649d03d4b73 remains available. This supplement changes no seller source or testnet evidence.

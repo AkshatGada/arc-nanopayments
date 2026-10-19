@@ -1,0 +1,28 @@
+This harness now imports the actual updated package through an absolute Cargo
+path dependency. The copied src/ files are historical and disabled by
+Cargo.toml autolib=false/autobins=false. The original redirect reproduction was
+superseded by reaudit_cross_origin_307_is_blocked, which expects 502 and zero
+destination requests. The disproved slash suspicion is explicitly ignored.
+
+Observed re-audit results, 16 October 2026:
+Actual package:
+  cargo test --offline --locked
+    17 compatibility tests passed, 0 failed.
+  cargo fmt --all --check
+    Passed.
+  cargo clippy --offline --locked --all-targets -- -D warnings
+    Passed.
+
+Independent harness command (run in this directory):
+  CARGO_TARGET_DIR=/Users/akshat/circle/gateway-axum-seller/target cargo test --offline --locked --test audit -- --nocapture
+Result:
+  17 passed, 0 failed, 1 ignored (disproved historical slash suspicion).
+  redirect 307 -> seller 502 Bad Gateway, captured settlements=0.
+  HTTP 400 success:true -> seller 502, fulfilled=0, submissions=1.
+  HTTP 412 success:true -> seller 502, fulfilled=0, submissions=1.
+  Nested HEAD/POST/OPTIONS/DELETE -> 405, zero settlement calls.
+
+No remaining concrete defect identified by source review and these probes.
+Only synthetic offline/loopback compatibility was established. No Circle hosted
+interoperability, signature verification, replay behavior or final settlement
+was exercised. No actual package implementation edits were made by this auditor.
