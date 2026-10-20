@@ -54,6 +54,7 @@ import {
 import { shortenHash } from "@/lib/utils";
 import { usePaymentEvents } from "@/hooks/use-transactions";
 import { useWithdrawals } from "@/hooks/use-withdrawals";
+import { PaymentDetailsDialog } from "@/components/dashboard/payment-details-dialog";
 
 type SortDirection = "default" | "asc" | "desc";
 type SortField = "amount" | "date";
@@ -319,13 +320,14 @@ export default function Dashboard() {
                       <SortIcon direction={sortField === "date" ? sortDirection : "default"} />
                     </button>
                   </TableHead>
+                  <TableHead><span className="sr-only">Details</span></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loadingPayments ? (
                   <TableRow>
                     <TableCell
-                      colSpan={5}
+                      colSpan={6}
                       className="h-24 text-center text-muted-foreground"
                     >
                       <Loader2 size={16} className="animate-spin inline mr-2" />
@@ -335,7 +337,7 @@ export default function Dashboard() {
                 ) : paginatedPayments.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={5}
+                      colSpan={6}
                       className="h-24 text-center text-muted-foreground"
                     >
                       No payments found.
@@ -376,6 +378,9 @@ export default function Dashboard() {
                       </TableCell>
                       <TableCell className="text-muted-foreground text-xs">
                         {formatDate(ev.created_at)}
+                      </TableCell>
+                      <TableCell>
+                        <PaymentDetailsDialog key={`${ev.id}:${ev.gateway_tx}`} payment={ev} />
                       </TableCell>
                     </TableRow>
                   ))

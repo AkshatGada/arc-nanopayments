@@ -110,6 +110,7 @@ The dashboard at `/dashboard` provides:
 
 - **Gateway Balance** — Top-bar badge showing the seller's available Gateway balance, with a detail dialog for total, withdrawing, withdrawable, and wallet USDC balances
 - **Payments Table** — Real-time list of incoming nanopayments with filtering and sorting, linked to [Arc Testnet Explorer](https://testnet.arcscan.app)
+- **Payment Details** — Open **Details** on a payment, then **Check settlement** to look up its Gateway transfer on demand. Opening the dialog makes no lookup; **Check again** refreshes its status and last-checked time. A batch transaction hash can be copied when present. Failed checks keep the last successful result explicitly labeled. Records without a transfer UUID, known payer or stored payment requirements cannot be checked. Gateway acceptance and later settlement are separate: this view does not prove resource delivery or the current available balance. It uses the dashboard session and a read-only server request, with no wallet key, payment retry or background polling.
 - **Withdraw Dialog** — Withdraw available USDC from Gateway to a wallet address on any supported testnet chain (Arc Testnet, Base Sepolia, Ethereum Sepolia, Arbitrum Sepolia, Optimism Sepolia, Avalanche Fuji, Polygon Amoy)
 
 ## Environment Variables
