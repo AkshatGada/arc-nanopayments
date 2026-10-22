@@ -175,3 +175,75 @@ This sample application:
 ## Legal
 
 Sample apps provided for demonstration and educational purposes only, intended for Arc testnet use only, and not production-ready. See [Arc.io](https://arc.io) for more.
+
+
+## Browser buyer playground
+
+Open `/playground` (also linked from sign-in and the seller dashboard) to make
+one deliberate testnet purchase without putting a buyer private key in an
+application environment file. Configure the seller and database as above,
+including `SELLER_ADDRESS`. Missing or invalid seller configuration keeps the
+catalog visible but disables purchases. This feature targets the PR #42
+SDK/auth/test baseline and does not require the seller settlement lookup in
+PR #50 or the balance changes in PR #49.
+
+1. Use an existing ordinary EOA in an injected browser wallet. MetaMask desktop
+   is the initial target; smart/embedded wallets and mobile connectors are not
+   supported. Choose the wallet and explicitly connect. Switch/add Arc Testnet
+   when prompted by the page; nothing connects, signs or funds on initial render.
+2. Get Arc Testnet USDC from [Circle's faucet](https://faucet.circle.com), then
+   select **Refresh balances**. Wallet USDC also pays gas; its native 18-decimal
+   and ERC20 six-decimal representations are the same funds. Gateway available
+   USDC is a separate deposited balance. Unavailable reads are never shown as zero.
+3. Enter an exact deposit amount (at most six decimal places) and review funding.
+   Approve only that amount when allowance is insufficient, wait for its receipt,
+   then separately review and submit the deposit. Leave wallet USDC for gas; the
+   page simulates the transaction and checks principal plus estimated fees.
+   Gateway credit can lag a successful deposit; refresh manually rather than
+   depositing again.
+4. Select one of the four sample resources. Compute accepts up to 2,000 characters
+   of text. **Get price** makes an unpaid GET/POST. Review the actual challenge's
+   amount, recipient and network, then explicitly **Pay … and request resource**.
+   The SDK signs a Gateway authorization valid for at least seven days plus
+   100 seconds, with a ten-minute clock allowance before signing. The UI's
+   60-second quote freshness is separate from that validity. Disconnecting does
+   not revoke a signature. No signed payload is logged or persisted by the page.
+5. Inspect the resource and acknowledgement. A validated acknowledgement means
+   Gateway acceptance, not chain settlement. Its UUID is a Gateway reference,
+   not an explorer transaction hash. Resource success alone does not confirm a
+   payment; a failed/interrupted request can still have an unknown payment outcome.
+   The page never automatically signs, resubmits or retries a payment. Transaction
+   dispatch is guarded against wallet-context changes and SDK method fallbacks;
+   one explicit funding attempt can reach the provider only once.
+
+If a transaction is cancelled or replaced by a different call, it does not count
+as a confirmed approval/deposit. Switching networks pauses receipt reads; return
+to Arc in the original wallet and explicitly **Check receipt**. Known cancellation
+or different-replacement outcomes remain terminal across this recovery. If a
+replacement was mined while tracking was paused and the RPC no longer serves
+the original transaction, its replacement may remain unknown; inspect wallet
+activity rather than assuming a deposit failed or submitting it again. If submission
+loses its response before returning a hash, inspect wallet activity before
+intentionally starting another deposit. Attempt evidence is in memory only;
+reloading loses it and cannot cancel an already broadcast transaction. A new
+funding review is an intentional new action, not a safe retry of an unknown one.
+
+Public config is allowlisted server-page props, with no config endpoint. The
+keyless `/api/buyer/balance?address=…` route reads only that address's public Arc
+Gateway USDC balance through a fixed testnet host; it uses no signing/database
+credentials. Seller `/api/gateway/*` and dashboard session protections are
+unchanged. Buyer SDK code is scoped to the playground route. No runtime wallet
+framework or database migration is introduced.
+
+Run `npm test`, `npm run lint`, `npx tsc --noEmit` and `npm run build` for local
+validation. Buyer tests use synthetic addresses, dummy signatures, mocked HTTP
+and injected providers; they make no real payments. DOM tests use the dev-only
+Testing Library and jsdom dependencies. Real wallet/RPC/Gateway/seller integration
+has not been validated by those tests and needs a separately authorized testnet
+run before claiming live end-to-end compatibility. This remains an educational
+reference, not production payment software.
+
+Read-only wallet RPCs have a five-second deadline. Balance refresh is bounded
+as a whole and obsolete reads are discarded after account/network changes or
+Disconnect. Wallet connection/signature/submission prompts have no pretend
+cancellation timeout; an already dispatched transaction can still complete.
